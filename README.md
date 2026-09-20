@@ -167,12 +167,13 @@ escape.
 
 ## Validating
 
-Before building further: console `situation great_pestilence` on a live save to
-re-fire it and read the actual death toll. The Situation may not be firing at
-all rather than firing weakly — different bug, different fix. There are reports
-of it hanging with 2–3 permanently-infected locations and never ending.
+See **[VALIDATION.md](VALIDATION.md)**. Short version: M&T ships a yearly census
+logger (`SYS-CENSUS.txt`) that writes `::POP::<year>:<region>:<population>` to
+`error.log`. Enable it with `event LOGGER_CHARTS.01` from the console, then grep
+for `mesoamerica`. No save inspection or manual counting needed.
 
-After: observer run, checkpoint central Mexico at 1550 / 1600 / 1700 / 1800.
+Success is 1–3M at 1600 **and still under ~4M at 1700**. The second number is
+the real test.
 
 Watch for a location with mortality applied but max pop untouched — you'll kill
 19 million and watch them regrow, because the soft cap is still up there pulling
