@@ -1,0 +1,39 @@
+# New World Pestilence - all tunables in one place.
+# Every number here is a guess until an observer run says otherwise. Tune these,
+# not the disease file.
+
+# --- Recurrence -------------------------------------------------------------
+# Monthly chance the cocoliztli spawn roll fires at all, once the gate is open.
+# 0.004/month ~= one wave per 20 years. Historical waves: 1545-48, 1576-80,
+# with lesser ones through the 17th century.
+nwp_cocoliztli_monthly_spawn_chance = 0.004
+
+# Initial presence of a fresh outbreak (0..1). Smallpox spawns at 0.5, the
+# situation's forced opening outbreak at 1.0.
+nwp_cocoliztli_spawn_strength = 0.75
+
+# --- Lethality --------------------------------------------------------------
+# Fraction of those who meet their fate who die. Smallpox is { 0.05 0.3 },
+# measles { 0.001 0.002 }, influenza 0.001, malaria { 0.85 0.95 }.
+# Cocoliztli killed an estimated 5-15M across New Spain in 1545-48 alone.
+# NOTE: mortality_rate takes a literal { min max } range, so it is written
+# inline in the disease file rather than driven from here. Edit it there.
+# Current value: { 0.3 0.5 }
+
+# Fraction of the infected whose fate is decided per calc interval.
+# Smallpox uses 0.25, malaria 1.0.
+nwp_cocoliztli_fate_per_calc = 0.4
+
+# --- Resistance -------------------------------------------------------------
+# Monthly decay of acquired resistance. THE load-bearing number.
+# M&T: bubonic 0.0002, smallpox 0.0007, influenza/measles 0.002, malaria 0.
+# The 1576 wave killed people who had survived 1545, so resistance must decay
+# fast enough that a wave 25-30 years later still bites. 0.004/month wipes full
+# resistance in ~21 years.
+nwp_cocoliztli_resistance_decay = 0.004
+
+# --- Carrying-capacity collapse ---------------------------------------------
+# Applied while the disease is present, scaled by presence. See
+# main_menu/common/static_modifiers/nwp_collapse.txt for the persistent half.
+nwp_collapse_growth_penalty = -0.008
+nwp_collapse_capacity_penalty = -0.25

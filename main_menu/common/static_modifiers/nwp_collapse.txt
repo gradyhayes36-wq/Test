@@ -1,0 +1,45 @@
+# New World Pestilence - carrying-capacity collapse.
+#
+# Half A of the design: the thing that stops the rebound. Disease is
+# subtraction; EU5's free-land growth brackets are a spring, and emptying a
+# location is what arms them. This models why the land could not carry the old
+# densities again for a century and a half:
+#
+#   - chinampas, terraces and irrigation stopped being maintained because the
+#     maintainers were dead
+#   - congregacion uprooted survivors from land they knew how to farm
+#   - encomienda and repartimiento pulled labour into mines and estates
+#   - Spanish livestock took the rest (Melville's "plague of sheep" on the
+#     Valle del Mezquital)
+#
+# New modifier keys, so no REPLACE:/INJECT: prefix. Definition idiom copied
+# from M&T's main_menu/common/static_modifiers/MnT_centers.txt.
+#
+# NOT YET APPLIED BY ANYTHING. These need an on_action or event hook that
+# stamps them onto affected locations with a century-plus duration. See README
+# section "Not done yet".
+
+# Applied for decades after a wave passes: the fields are still there, the
+# people who knew how to work them are not.
+nwp_agricultural_collapse = {
+	game_data = {
+		category = location
+	}
+	local_population_growth = -0.005
+	local_population_capacity_modifier = -0.25
+	local_monthly_development = -0.004
+	local_prosperity_decay = 0.15
+}
+
+# The heavier version, for locations under an Old World overlord running
+# encomienda-style extraction. Can push a location net negative on its own.
+nwp_colonial_labour_regime = {
+	game_data = {
+		category = location
+	}
+	local_population_growth = -0.008
+	local_population_capacity_modifier = -0.40
+	local_monthly_development = -0.006
+	local_prosperity_decay = 0.25
+	local_migration_attraction = -15.0
+}

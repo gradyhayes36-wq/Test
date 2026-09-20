@@ -1,0 +1,163 @@
+# Cocoliztli - https://en.wikipedia.org/wiki/Cocoliztli_epidemics
+# New disease, additive. No REPLACE:/INJECT: prefix because nothing in vanilla
+# or M&T defines this key.
+#
+# Field set and idiom copied from M&T's in_game/common/diseases/MnT_smallpox.txt.
+# The non-immunising, high-mortality shape is copied from MnT_malaria.txt.
+#
+# Design note: this deliberately does NOT hook the great_pestilence Situation.
+# M&T's Situation has no disease registry - the three diseases gate their own
+# spawn blocks on the Situation's state, and the Situation only force-spawns
+# smallpox in on_start. So a fourth disease needs no registration at all, and
+# by gating on its own date window it outlives the Situation for free.
+
+cocoliztli = {
+
+	# ~1 wave per 20 years while the window is open. See nwp_tuning.txt.
+	monthly_spawn_chance = {
+		value = 0
+		if = {
+			limit = {
+				# Window opens once Old World contact exists in the Americas,
+				# and stays open long after the Great Pestilence Situation ends.
+				continent:america = {
+					any_location_in_continent = {
+						population > 0
+						owner_from_old_world = yes
+					}
+				}
+			}
+			value = nwp_cocoliztli_monthly_spawn_chance
+		}
+	}
+
+	spawn = {
+		random_ownable_location = {
+			limit = {
+				population > 1
+				continent = continent:america
+
+				# Densely settled, agrarian Mesoamerica and the Andes took the
+				# worst of it. Cocoliztli is not a frontier disease.
+				OR = {
+					tropical_climate_trigger = yes
+					subtropic_climate_trigger = yes
+					mediterranean_climate_trigger = yes
+					continental_climate_trigger = yes
+				}
+
+				# Only where the colonial regime has actually arrived: the
+				# 1545 catastrophe followed congregacion, forced labour and
+				# the collapse of the maintained agricultural landscape.
+				OR = {
+					owner_from_old_world = yes
+					has_variable = had_great_pestilence_in_location
+					location_has_pestilence_trigger = yes
+				}
+			}
+			spawn_disease = {
+				disease = scope:disease
+				value = nwp_cocoliztli_spawn_strength
+				save_scope_as = outbreak
+			}
+		}
+	}
+
+	# Enteric fever: spread by contaminated water and crowding rather than
+	# breath, so denser settlement matters more than contact frequency.
+	r0 = {
+		if = {
+			limit = {
+				location_rank ?= location_rank:rural_settlement
+			}
+			value = { 2 4 }
+		}
+		else_if = {
+			limit = {
+				location_rank ?= location_rank:town
+			}
+			value = { 4 8 }
+		}
+		else = {
+			value = { 8 12 }
+		}
+
+		# Congregacion concentrated survivors into new settlements with
+		# water supplies nobody had built for that many people.
+		multiply = {
+			value = "disease_presence(scope:disease)"
+			multiply = 2
+			add = 1
+		}
+	}
+
+	calc_interval_days = { 6 14 }
+
+	location_stagnation_chance = {
+		if = {
+			limit = {
+				"disease_presence(scope:disease)" > 0.05
+			}
+			value = "distance_to_squared(scope:disease.origin)"
+			multiply = 0.0006
+			multiply = 0.0035
+		}
+		else = {
+			value = "distance_to_squared(scope:disease.origin)"
+			multiply = 0.00004
+		}
+	}
+
+	percentage_to_meet_their_fate_on_calc = {
+		value = nwp_cocoliztli_fate_per_calc
+	}
+
+	location_spread_threshold = {
+		value = 0.15
+	}
+
+	# Half A, the suppression half, in its cheapest form: while a wave is
+	# present the location cannot grow back. Scaled by presence by the engine.
+	# The PERSISTENT century-long collapse is a separate modifier - see
+	# main_menu/common/static_modifiers/nwp_collapse.txt. It is not wired up
+	# yet; that needs an on_action or event hook. See README.
+	location_modifier = {
+		local_population_growth = nwp_collapse_growth_penalty
+		local_prosperity_decay = 0.3
+		local_monthly_development = -0.005
+		local_migration_attraction = -20.0
+	}
+
+	# The 1576 wave killed survivors of 1545. Resistance must not carry over
+	# between waves the way smallpox resistance does (0.0007/month there).
+	monthly_resistance_reduction = nwp_cocoliztli_resistance_decay
+
+	mortality_rate = {
+		value = { 0.3 0.5 }
+	}
+
+	character_mortality_chance = {
+		value = 0.06
+		multiply = "disease_presence(scope:disease)"
+	}
+
+	on_spread_to_country = {
+	}
+
+	map_color = {
+		lerp = { # Ochre
+			min_color = rgb { 214  178  110 }
+			max_color = rgb { 110 62 6 }
+			factor = "disease_presence(scope:disease)"
+		}
+	}
+
+	secondary_map_color = {
+		if = {
+			limit = {
+				disease_affects_pops_here = scope:disease
+			}
+			value = rgb { 110 62 6 }
+		}
+	}
+}
