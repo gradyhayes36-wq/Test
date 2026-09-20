@@ -116,6 +116,23 @@ It is `orphan = yes`, so it fires from the console on demand at any date,
 against any save, with no pulse or situation required. Output is one line per
 region — about 40 lines, not 900KB.
 
+## Baseline: 1676
+
+Measured. See `docs/measurements/`. Mesoamerica 19.8M against a 1–3M target,
+in a world that is itself running at ~60% of historical — so the distortion is
+worse as a share than in absolute terms. Mesoamerica has been flat at ~20M
+since the 1337 start, which suggests a population pinned at its carrying
+capacity rather than one that was never killed.
+
+`nwp.9` now logs three fields:
+
+```
+::NWPPOP::<year>:<region>:<population>:<avg fill ratio>:<inhabited locations>
+```
+
+The fill ratio is the test. Near 1.0 means capacity-limited, and mortality
+alone can never hold the number down.
+
 ## Reading the result
 
 Success is 1–3M in mesoamerica_region at 1600 **and still under ~4M at 1700**.

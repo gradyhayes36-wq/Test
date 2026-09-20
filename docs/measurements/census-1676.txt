@@ -1,0 +1,76 @@
+Scandinavia:4290.79383
+North Atlantic Islands:233.5515
+Northern Germany:10248.84999
+Southern Germany:7498.54851
+Britain:3883.04358
+Ireland:1334.49396
+France:10736.93238
+Iberia:6051.28572
+Italy:7008.52848
+Carpathia:3109.44084
+Baltic:3790.89191
+Ruthenia:2618.54308
+Caucasus:2206.68334
+Pontic Steppe:2341.90638
+Russia:4978.21369
+Ural:1527.85101
+Balkans:4436.31891
+Khorasan:3705.78584
+Anatolia:3696.69885
+Crescent:5725.53821
+Arabia:6081.50482
+Persia:4365.73362
+East China:27302.25487
+Japan:8724.91296
+Korea:3716.75703
+Manchuria:2051.70603
+Mongolia:1145.45332
+North China:15762.18964
+South China:8550.53744
+Tibet:1815.7973
+West China:6759.80455
+Xinjiang:430.82985
+West Siberia:931.03941
+East Siberia:119.72984
+Hindustan:20776.92008
+Bengal:15097.94009
+Central India:8633.55792
+Western India:8947.11584
+Deccan:26183.77187
+Indochina:14522.48058
+Indonesia:16334.70561
+Central Africa:1920.75131
+Kongo:3014.39137
+Ethiopia:2815.88965
+Nubia:3672.84715
+Somalia:2211.08824
+Great Lakes:3053.89265
+Swahili Coast:1691.39753
+Madagascar:511.7922
+Egypt:6751.30247
+Macaronesia:85.32252
+Maghreb:7217.68335
+Southern Africa Islands:0
+Southern Africa:391.62924
+Zimbabwe:1053.46447
+Guinea:9286.01982
+Sahel:5269.35202
+Canada:3701.3945
+Caribbean:1758.42681
+East Coast:5487.87477
+Great Plains:676.11151
+Mesoamerica:19802.49935
+Central America:3391.40941
+Aridoamerica:704.87541
+Alaska:59.967
+West Coast:212.76573
+Colombia:7324.82691
+Brazil:4674.76508
+Andes:10140.96397
+Chaco:527.48575
+La Plata:409.14881
+Australia:197.63341
+New Zealand:42.907
+Polynesia:436.70537
+Micronesia:119.05217
+Melanesia:1318.21511

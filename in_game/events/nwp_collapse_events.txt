@@ -96,9 +96,46 @@ nwp.9 = {
 					}
 				}
 			}
-			error_log = "::NWPPOP::[GetCurrentYear]:[THIS.GetRegion.GetNameWithNoTooltip]:[SCOPE.GetLocalVariable('nwp_pop_total').GetValue]"
+			# Population as a fraction of capacity, averaged over inhabited
+			# locations. This is the number that decides whether mortality can
+			# ever work: at a fill ratio near 1.0 the region is pinned at its
+			# soft cap, every death is refilled by growth, and only lowering
+			# the cap changes anything.
+			#
+			# It is also the free-land bracket test. Vanilla's comment on
+			# abundant_free_land reads "when its <10% capacity & <10k", and
+			# M&T's bubonic plague uses location_population_percentage < 0.1
+			# for the same low-density check.
+			set_local_variable = {
+				name = nwp_fill_sum
+				value = {
+					every_ownable_location_in_region = {
+						limit = { population > 0 }
+						add = location_population_percentage
+					}
+				}
+			}
+			set_local_variable = {
+				name = nwp_loc_count
+				value = {
+					every_ownable_location_in_region = {
+						limit = { population > 0 }
+						add = 1
+					}
+				}
+			}
+			if = {
+				limit = { local_var:nwp_loc_count > 0 }
+				change_local_variable = {
+					name = nwp_fill_sum
+					divide = local_var:nwp_loc_count
+				}
+			}
+			error_log = "::NWPPOP::[GetCurrentYear]:[THIS.GetRegion.GetNameWithNoTooltip]:[SCOPE.GetLocalVariable('nwp_pop_total').GetValue]:[SCOPE.GetLocalVariable('nwp_fill_sum').GetValue]:[SCOPE.GetLocalVariable('nwp_loc_count').GetValue]"
 		}
 		remove_local_variable = nwp_pop_total
+		remove_local_variable = nwp_fill_sum
+		remove_local_variable = nwp_loc_count
 		error_log = "::NWPPOP::done"
 	}
 }
