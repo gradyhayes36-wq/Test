@@ -16,6 +16,11 @@ nwp.1 = {
 			limit = {
 				continent = continent:america
 				population > 1
+				# Settler colonies are not what collapsed. The agricultural
+				# landscape that stopped being maintained was the one the
+				# natives built and worked, so this follows the population
+				# rather than the map.
+				dominant_culture = { is_culture_native_american = yes }
 				disease_presence = {
 					disease = disease:cocoliztli
 					value > 0.1

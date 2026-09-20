@@ -54,6 +54,14 @@ cocoliztli = {
 					has_variable = had_great_pestilence_in_location
 					location_has_pestilence_trigger = yes
 				}
+
+				# And only where there are natives to kill. Vanilla's
+				# great_pestilence gates its spawn the same way, with
+				# any_pop = { culture = { is_culture_native_american = yes } }.
+				# A settler colony is not a cocoliztli target.
+				any_pop = {
+					culture = { is_culture_native_american = yes }
+				}
 			}
 			spawn_disease = {
 				disease = scope:disease

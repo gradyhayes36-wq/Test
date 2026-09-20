@@ -66,25 +66,37 @@ nwp_demographic_collapse = {
 
 	# root = situation
 	on_monthly = {
+		# Virgin soil is a property of the PEOPLE, not the ground. A location
+		# whose population has become majority settler has no business
+		# carrying a no-acquired-immunity penalty, so this re-evaluates every
+		# month and lifts as well as applies.
+		#
+		# The earlier version used any_pop, which meant a single surviving
+		# native pop kept the full penalty on a location that was 95%
+		# colonists. dominant_culture is the fix.
 		every_ownable_location = {
 			limit = {
 				continent = continent:america
 				population > 0
+				dominant_culture = { is_culture_native_american = yes }
 				NOT = { has_variable = nwp_virgin_soil_applied }
-				# Susceptibility is about prior exposure, not ownership: the
-				# pops are the reason, so gate on them rather than on who
-				# happens to hold the location. Newly colonised locations get
-				# swept on a later month, which is why this repeats rather
-				# than running once in on_start.
-				any_pop = {
-					culture = { is_culture_native_american = yes }
-				}
 			}
 			set_variable = nwp_virgin_soil_applied
 			add_location_modifier = {
 				modifier = nwp_virgin_soil
 				days = -1
 			}
+		}
+
+		# The lift. Settler-majority locations stop being virgin soil.
+		every_ownable_location = {
+			limit = {
+				continent = continent:america
+				has_variable = nwp_virgin_soil_applied
+				NOT = { dominant_culture = { is_culture_native_american = yes } }
+			}
+			remove_variable = nwp_virgin_soil_applied
+			remove_location_modifier = nwp_virgin_soil
 		}
 
 		# Keep the Situation visible to countries that lived through it, the

@@ -26,30 +26,56 @@ absolute terms; as a **share of this game's own world** it is about 7x
 over-represented. Scaled to the game's world size, Mesoamerica would sit near
 **1.0M**, making the distortion closer to 20x than 7x.
 
-## It is not only Mesoamerica
+## Which regions the error actually lives in
 
-Rough ratios against historical estimates for the late seventeenth century:
+**Canada, the East Coast and Brazil are not evidence of anything.** This save
+has had heavy player colonisation in exactly those areas, so their numbers are
+the player's own doing rather than a mod defect. An earlier version of this
+file computed ~15–20x ratios for them against historical estimates; that
+comparison was invalid and has been withdrawn.
 
-| Region | Game | Historical | Ratio |
+What survives as evidence is the unplayed, native-majority part of the New
+World:
+
+| Region | Game | Historical, ~1676 | Ratio |
 |---|---|---|---|
-| Canada | 3,701k | ~0.15M | ~20x |
-| East Coast | 5,488k | ~0.35M | ~15x |
-| Brazil | 4,675k | ~0.3M | ~15x |
 | Mesoamerica | 19,802k | ~1.5M | ~13x |
-| Colombia | 7,325k | ~1M | ~7x |
 | Andes | 10,141k | ~2M | ~5x |
+| Colombia | 7,325k | ~1M | ~7x |
 | Caribbean | 1,758k | ~0.5M | ~3.5x |
 
-Mesoamerica is the largest absolute error but **not the worst ratio**. Canada,
-the East Coast and Brazil are proportionally worse. That is worth keeping in
-view: the submod was scoped to central Mexico, and M&T's Great Pestilence
-situation tracks Caribbean / Mesoamerica / Andes specifically, but the northern
-and Brazilian numbers are at least as distorted and are probably a different
-problem — those regions never held millions, so their error is about starting
-population and colonial growth rather than epidemic mortality.
+These are the three regions M&T's Great Pestilence situation tracks by name,
+plus Colombia. Mesoamerica is both the largest absolute error and the worst
+ratio among them, so the submod's original scope was right after all.
 
-`nwp_virgin_soil` applies to every American location with native pops, so it
-does reach them. `cocoliztli` largely does not, by design.
+## Settlers and natives
+
+The engine cannot make one outbreak kill natives and spare settlers in the
+same location. Mortality is applied at the location, scaled by presence;
+`local_disease_resistance` is a location modifier; and `specific_pop_type_effect`
+keys on pop **type** (peasants, nobles, burghers) — social class, not origin.
+Once a colonist and a native peasant share a location they share its epidemic.
+
+What the engine does give is **composition-aware targeting**, and after this
+correction the submod uses it everywhere:
+
+| Where | Test |
+|---|---|
+| `nwp_virgin_soil` applied | `dominant_culture = { is_culture_native_american = yes }` |
+| `nwp_virgin_soil` **removed** | re-evaluated monthly; lifts when the location goes settler-majority |
+| `nwp_agricultural_collapse` | same dominant-culture test |
+| `cocoliztli` spawn | `any_pop = { culture = { is_culture_native_american = yes } }`, as vanilla `great_pestilence` does |
+
+The first version had a real bug here: the Situation used `any_pop`, so a
+single surviving native pop kept the full virgin-soil penalty on a location
+that had become 95% colonists — and nothing ever removed it. It now lifts as
+well as applies.
+
+The practical effect is close to what was wanted. A colony that is still mostly
+native is virgin soil and collapses; once settlers dominate, the penalties come
+off and it grows normally. Settlers in a native-majority location still catch
+the epidemic, which is not only unavoidable but correct — Europeans in New
+Spain did die in the cocoliztli waves, just at far lower rates.
 
 ## The flat line
 
