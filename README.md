@@ -264,6 +264,16 @@ Devastation plus our own heaviest hand-written modifier is −0.013 against
 Which is why the food mechanism in findings 8 and 9 is the design, and the
 rest is support.
 
+**Measured 1676 (see `docs/measurements/`):** Mesoamerica sits at 0.610 of
+capacity with ~100k capacity per location across 325 locations. At any target
+in the 1–3M band, pop/location falls under 10k *and* under 10% of capacity —
+both conditions for `abundant_free_land`. So every historically correct
+outcome lands in the +1.5%/yr bracket, and a 2M Mesoamerica doubles in 46
+years. Capacity reduction is what fails the fill condition and keeps the
+collapsed population out of it. That makes
+`local_population_capacity_modifier` the load-bearing field in
+`nwp_collapse.txt`, with starvation the thing that gets you down there.
+
 ## Still unknown
 
 **Baseline pop growth.** `location_base_values` in vanilla `location.txt`

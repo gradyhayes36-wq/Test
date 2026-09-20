@@ -19,6 +19,28 @@
 # stamps them onto affected locations with a century-plus duration. See README
 # section "Not done yet".
 
+# CAPACITY IS THE LOAD-BEARING FIELD HERE. Measured 1676: Mesoamerica holds
+# 19.8M across 325 locations at 0.610 fill, so ~100k capacity per location -
+# the same as Britain, Iberia and Colombia. Capacity is not the anomaly; the
+# population is.
+#
+# But at any target in the 1-3M band, pop/location falls under 10k AND under
+# 10% of capacity, which is both conditions for abundant_free_land and its
+# +1.5%/yr. A 2M Mesoamerica doubles in 46 years. Every historically correct
+# outcome arms the spring, precisely because the mortality worked.
+#
+# Cutting capacity is what fails the fill condition and keeps the collapsed
+# population out of that bracket:
+#
+#   floor   cap/loc must be under   cut from ~100k
+#   1.0M            30.8k                69%
+#   1.5M            46.2k                54%
+#   2.0M            61.5k                38%
+#
+# The two modifiers below total -65% additively or -55% multiplicatively,
+# supporting a floor of roughly 1.0M or 1.5M. Which of those applies is
+# UNTESTED and moves the supportable floor by half a million.
+#
 # Applied for decades after a wave passes: the fields are still there, the
 # people who knew how to work them are not.
 nwp_agricultural_collapse = {

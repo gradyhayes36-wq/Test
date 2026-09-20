@@ -77,6 +77,74 @@ off and it grows normally. Settlers in a native-majority location still catch
 the epidemic, which is not only unavoidable but correct — Europeans in New
 Spain did die in the cocoliztli waves, just at far lower rates.
 
+## The capacity hypothesis was wrong
+
+`nwp.9` now reports fill ratio. **Mesoamerica is at 0.610** — six-tenths of
+capacity, not pinned at it. Several Old World regions are fuller: Egypt 0.805,
+Arabia 0.801, Deccan 0.730, Western India 0.698. So the flat line is not a
+population pressed against a ceiling, and the "mortality is the wrong lever"
+conclusion does not follow. Withdrawn.
+
+What the fill ratio gives instead is the capacity per location, and that turns
+a guess into arithmetic:
+
+| Region | pop (k) | fill | locations | pop/loc | implied cap/loc |
+|---|---|---|---|---|---|
+| Mesoamerica | 19,802 | 0.610 | 325 | 60.9k | **99.9k** |
+| Colombia | 7,325 | 0.353 | 207 | 35.4k | 100.4k |
+| Caribbean | 1,758 | 0.168 | 111 | 15.8k | 94.0k |
+| Britain | 3,883 | 0.167 | 234 | 16.6k | 99.3k |
+| Iberia | 6,051 | 0.142 | 424 | 14.3k | 100.6k |
+| Andes | 10,141 | 0.456 | 375 | 27.0k | 59.4k |
+
+Mesoamerica's capacity per location is **utterly ordinary** — the same ~100k as
+Britain, Iberia, Colombia and the Caribbean. Its capacity is not the anomaly.
+Its *population* is: 60.9k per location against Britain's 16.6k.
+
+## The trap, now measured
+
+The design spec's §3 fear was right, and here is the size of it. Mesoamerica
+has 325 locations and ~100k capacity each. At every target population in the
+1–3M band:
+
+| Target | pop/loc | under 10k? | fill | under 10%? | `abundant_free_land`? |
+|---|---|---|---|---|---|
+| 1.0M | 3.1k | yes | 3.1% | yes | **YES, +1.5%/yr** |
+| 1.5M | 4.6k | yes | 4.6% | yes | **YES, +1.5%/yr** |
+| 2.0M | 6.2k | yes | 6.2% | yes | **YES, +1.5%/yr** |
+| 3.0M | 9.2k | yes | 9.2% | yes | **YES, +1.5%/yr** |
+| 4.0M | 12.3k | no | 12.3% | no | no |
+
+**Every historically correct outcome lands in the fast-rebound bracket.** At
++1.5%/yr a 2M Mesoamerica doubles in 46 years. Collapse it by 1600 and it is
+back over 4M by 1650 — the design spec's 1700 test fails, and it fails
+*because* the mortality worked.
+
+Note where the cliff sits: 4.0M is outside the bracket, 3.0M is inside it at
+9.2%. The target band straddles the threshold almost exactly.
+
+## Why capacity reduction is the answer after all
+
+Not because pops are pinned — they aren't — but because **cutting capacity is
+what keeps the collapsed population out of the +1.5% bracket.** Failing either
+condition disqualifies it, and the fill condition is the one we can move.
+
+| Floor | cap/loc must be under | cut from 99.9k |
+|---|---|---|
+| 1.0M | 30.8k | 69% |
+| 1.5M | 46.2k | 54% |
+| 2.0M | 61.5k | **38%** |
+| 3.0M | 92.3k | 8% |
+
+`nwp_agricultural_collapse` carries `local_population_capacity_modifier =
+-0.25` and `nwp_colonial_labour_regime` `-0.40`. If those stack additively
+that is −65%, supporting a floor near 1.0M; multiplicatively, −55%, supporting
+about 1.5M. Either way the sizing is roughly right — which was luck, and is now
+justified by measurement.
+
+**Whether they stack additively or multiplicatively is untested**, and it
+changes the supportable floor by half a million.
+
 ## The flat line
 
 M&T starts Mesoamerica at roughly 20M in 1337. It is 19.8M in 1676.
@@ -96,8 +164,14 @@ it reframes the whole design:
 That would make `local_population_capacity_modifier` the load-bearing part of
 `nwp_collapse.txt`, and mortality merely the thing that gets you there faster.
 
-**This is a hypothesis, not a finding.** The next measurement tests it:
-`nwp.9` now also logs `location_population_percentage` averaged over inhabited
-locations. If Mesoamerica's fill ratio is near 1.0, the diagnosis holds and the
-design should pivot toward capacity. If it is well below 1.0, the population is
-growth-limited rather than capacity-limited and mortality can in principle win.
+**Tested and disproved** — see above, the fill ratio is 0.610. Mortality can
+in principle win. But something is holding Mesoamerica at six-tenths of
+capacity rather than letting it grow toward the ceiling, and we do not know
+what. Food, M&T's soft-cap taper and prosperity are all candidates. Whatever it
+is, it is the equilibrium the submod has to move.
+
+**The next measurement is a fresh 1337 start**, `event nwp.9` on day one. That
+gives the true baseline instead of the design spec's remembered ~20M, and says
+whether Mesoamerica has been flat for 339 years, declined slightly, or grew and
+fell back. It takes five minutes and it is the most informative thing left to
+measure.
