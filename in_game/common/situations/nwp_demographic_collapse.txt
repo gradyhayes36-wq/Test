@@ -1,20 +1,28 @@
 ﻿# A NEW Situation, not an override of M&T's.
 #
-# This exists to be a periodic hook we fully own. M&T's great_pestilence and
-# columbian_exchange situations already coexist, so situations are additive by
-# construction: a new key cannot collide with anything, and on_monthly gives a
-# guaranteed sweep without touching M&T's on_action lists.
+# This exists to be a periodic hook we fully own. Vanilla's great_pestilence
+# and black_death situations and M&T's reworked pair already coexist, so
+# situations are additive by construction: a new key cannot collide with
+# anything, and on_monthly gives a guaranteed sweep without touching M&T's
+# on_action lists.
 #
 # It also states the design target directly. The Situation IS the suppression
 # window: while it runs, New World locations are virgin soil and cannot
 # recover. It ending is recovery beginning, which is why can_end is a date
 # rather than a condition - the design spec's hardest requirement is that
 # recovery must not start before ~1700.
+#
+# Scopes are per the vanilla schema, docs/vanilla-reference/situations/readme.txt:
+#   can_start / can_end / on_start / on_monthly / on_ended   root = situation
+#   visible                             root = country, scope:target = situation
+#   tooltip / map_color                 root = location, scope:target = situation
 
 nwp_demographic_collapse = {
+	# Vanilla script value, used by both great_pestilence and black_death.
 	monthly_spawn_chance = monthly_spawn_chance_unique
 	hint_tag = hint_nwp_demographic_collapse
 
+	# root = situation
 	can_start = {
 		#Any location in america has an owner of the old world
 		continent:america = {
@@ -25,25 +33,38 @@ nwp_demographic_collapse = {
 		}
 	}
 
+	# root = situation
+	#
+	# Vanilla ties both its situations to their disease: great_pestilence ends
+	# when disease:great_pestilence is no longer active, black_death when its
+	# original outbreak dies out. We deliberately do NOT, because the whole
+	# problem is that the population recovers the moment the disease stops.
+	# The suppression window has to outlive any single outbreak.
+	#
+	# Mexico sat at the floor for roughly 150 years. Cook & Borah's series
+	# bottoms out around 1620 and does not turn up meaningfully until the
+	# eighteenth century. This date is the single most important number in the
+	# submod.
 	can_end = {
-		# Mexico sat at the floor for roughly 150 years. Recovery begins when
-		# this Situation ends, so this date is the single most important
-		# number in the submod. Cook & Borah's series bottoms out around 1620
-		# and does not turn up meaningfully until the eighteenth century.
 		current_date > 1730.1.1
 	}
 
+	# root = country, scope:target = situation
 	visible = {
 		OR = {
 			has_variable = nwp_in_demographic_collapse
-			capital = { continent = continent:america }
+			capital ?= {
+				continent = continent:america
+			}
 		}
 	}
 
+	# root = situation
 	on_start = {
 		set_variable = { name = nwp_collapse_started value = yes }
 	}
 
+	# root = situation
 	on_monthly = {
 		every_ownable_location = {
 			limit = {
@@ -52,7 +73,9 @@ nwp_demographic_collapse = {
 				NOT = { has_variable = nwp_virgin_soil_applied }
 				# Susceptibility is about prior exposure, not ownership: the
 				# pops are the reason, so gate on them rather than on who
-				# happens to hold the location.
+				# happens to hold the location. Newly colonised locations get
+				# swept on a later month, which is why this repeats rather
+				# than running once in on_start.
 				any_pop = {
 					culture = { is_culture_native_american = yes }
 				}
@@ -63,8 +86,22 @@ nwp_demographic_collapse = {
 				days = -1
 			}
 		}
+
+		# Keep the Situation visible to countries that lived through it, the
+		# way M&T's great_pestilence uses had_great_pestilence.
+		every_country = {
+			limit = {
+				NOT = { has_variable = nwp_in_demographic_collapse }
+				any_owned_location = {
+					continent = continent:america
+					has_location_modifier = nwp_virgin_soil
+				}
+			}
+			set_variable = { name = nwp_in_demographic_collapse value = yes }
+		}
 	}
 
+	# root = situation
 	on_ended = {
 		every_ownable_location = {
 			limit = {
@@ -74,12 +111,39 @@ nwp_demographic_collapse = {
 			remove_variable = nwp_virgin_soil_applied
 			remove_location_modifier = nwp_virgin_soil
 		}
+		every_country = {
+			limit = { has_variable = nwp_in_demographic_collapse }
+			remove_variable = nwp_in_demographic_collapse
+		}
 	}
 
+	# root = location, scope:target = situation
 	tooltip = {
 		if = {
 			limit = { has_location_modifier = nwp_virgin_soil }
 			custom_tooltip = "NWP_VIRGIN_SOIL_PRESENT"
 		}
+	}
+
+	is_data_map = yes
+
+	# root = location
+	map_color = {
+		if = {
+			limit = { has_location_modifier = nwp_virgin_soil }
+			lerp = { # Ochre, matching the cocoliztli disease map colour
+				min_color = rgb { 214  178  110 }
+				max_color = rgb { 110 62 6 }
+				factor = "disease_presence(disease:cocoliztli)"
+			}
+		}
+		else = {
+			value = define:NMapColors|DEFAULT_COLOR
+		}
+	}
+
+	legend_key = {
+		desc = "nwp_demographic_collapse"
+		color = rgb { 110 62 6 }
 	}
 }

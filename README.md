@@ -161,9 +161,6 @@ escape.
 - **Script-value references inside disease fields are unverified.** M&T's
   disease files use literals throughout, and so do vanilla's. If
   `value = nwp_cocoliztli_spawn_strength` doesn't resolve, inline the numbers.
-- **`monthly_spawn_chance_unique` is assumed to be a vanilla script value.**
-  Both M&T situations use it and neither defines it. If it isn't, the new
-  Situation won't load.
 - **The 100-year modifier duration is a guess**, as is whether `mode = replace`
   refreshes the clock on a later wave. If it doesn't, a second wave won't
   extend the first wave's collapse.
@@ -278,6 +275,13 @@ mortality roll is none of those. Likely a define.
 suppresses it with an empty same-path file. Whether a submod loading after
 M&T can restore the entry by shipping the original content at that path
 depends on override semantics we haven't tested.
+
+## Schema reference
+
+`docs/vanilla-reference/situations/readme.txt` is vanilla's own field-by-field
+documentation for situations, including the root scope of every block. The
+`diseases/` folder alongside it holds the five vanilla disease definitions,
+including the `great_pestilence` one M&T deletes.
 
 ## Sources
 
