@@ -108,12 +108,33 @@ cocoliztli = {
 		}
 	}
 
+	# Calibration note. Lethality is not the mortality_rate alone - it is
+	# mortality x how long the disease sits at high presence. Vanilla's
+	# great_pestilence pairs mortality { 0.75 0.9 } with a fate rate of only
+	# 0.10, so presence saturates and stays saturated. M&T's smallpox burns
+	# through at 0.25 and collapses. We want great_pestilence's shape at
+	# roughly half its severity, because ours recurs and its does not.
 	percentage_to_meet_their_fate_on_calc = {
 		value = nwp_cocoliztli_fate_per_calc
 	}
 
+	# Vanilla great_pestilence 0.60 (0.85 in hard terrain), smallpox 0.15,
+	# bubonic 0.30. High thresholds keep the disease concentrated and lethal
+	# rather than smeared thinly across the map.
 	location_spread_threshold = {
-		value = 0.15
+		if = {
+			limit = {
+				num_roads = 0
+				OR = {
+					topography = mountains
+					vegetation = jungle
+				}
+			}
+			value = 0.55
+		}
+		else = {
+			value = 0.40
+		}
 	}
 
 	# Half A, the suppression half, in its cheapest form: while a wave is
@@ -122,10 +143,19 @@ cocoliztli = {
 	# main_menu/common/static_modifiers/nwp_collapse.txt. It is not wired up
 	# yet; that needs an on_action or event hook. See README.
 	location_modifier = {
+		# Vanilla great_pestilence uses -0.1 here; M&T's bubonic plague omits
+		# growth entirely and leans on attrition. -0.05 is half the vanilla
+		# apocalypse, which is the right place for a disease that returns.
+		# Scaled by presence by the engine, so this is the value at full
+		# saturation, not a flat penalty.
 		local_population_growth = nwp_collapse_growth_penalty
 		local_prosperity_decay = 0.3
-		local_monthly_development = -0.005
+		local_monthly_development = -0.02
 		local_migration_attraction = -20.0
+		local_forced_attrition = 5
+		max_attrition = 10
+		local_pop_promotion_speed_modifier = -2.0
+		local_pop_demotion_speed_modifier = 2.0
 
 		# Fields go unworked during a wave. This is also what pushes a
 		# location toward vanilla's province_starving, which carries
@@ -138,8 +168,12 @@ cocoliztli = {
 	# between waves the way smallpox resistance does (0.0007/month there).
 	monthly_resistance_reduction = nwp_cocoliztli_resistance_decay
 
+	# Vanilla great_pestilence { 0.75 0.9 }, malaria { 0.85 0.95 },
+	# bubonic { 0.3 0.6 }, smallpox { 0.05 0.3 }.
+	# Cocoliztli killed an estimated 5-15M in 1545-48 alone, but it recurs
+	# here, so per-wave severity sits below the one-shot apocalypse.
 	mortality_rate = {
-		value = { 0.3 0.5 }
+		value = { 0.4 0.6 }
 	}
 
 	character_mortality_chance = {

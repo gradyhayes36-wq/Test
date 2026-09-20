@@ -173,6 +173,58 @@ Watch for a location with mortality applied but max pop untouched — you'll kil
 19 million and watch them regrow, because the soft cap is still up there pulling
 them back.
 
+11. **Vanilla's `great_pestilence` disease still exists, fully written, and
+    M&T deletes it with a 3-byte file.** `in_game/common/diseases/great_pestilence.txt`
+    in the M&T repo contains nothing but a BOM — a same-path file-level
+    override. The vanilla definition it suppresses
+    (`docs/vanilla-reference/diseases/great_pestilence.txt`) is the apocalyptic
+    disease the design spec was trying to reconstruct:
+
+    ```
+    mortality_rate = { 0.75 0.9 }
+    percentage_to_meet_their_fate_on_calc = 0.10
+    location_spread_threshold = 0.60   # 0.85 in hard terrain
+    location_modifier = { local_population_growth = -0.1 ... }
+    r0 multiply = 0.0 outside the Americas
+    spawn requires is_culture_native_american and disease_resistance < 0.5
+    ```
+
+    Two things follow. First, restoring it is a three-line submod for anyone
+    who wants the blunt fix — worth knowing, though it's the ahistorical
+    single-disease model M&T deliberately left behind. Second, and more useful
+    here, it's a calibration table.
+
+12. **Lethality is not mortality_rate — it's mortality × time at saturation.**
+    This is the finding that most changed our numbers. Vanilla
+    `great_pestilence` pairs a 0.75–0.9 mortality with a fate rate of only
+    **0.10**, so presence builds and *stays* built. M&T's smallpox burns
+    through at 0.25 and collapses. A low `percentage_to_meet_their_fate_on_calc`
+    is what makes a disease devastating.
+
+    Our first draft had this exactly backwards: fate 0.4 with mortality
+    0.3–0.5, which reads as aggressive and behaves as a disease that burns out
+    before it saturates. Recalibrated to fate **0.12**, mortality
+    **{ 0.4 0.6 }**, spread threshold **0.40** — great_pestilence's shape at
+    roughly half its severity, which is where a recurring disease belongs.
+
+13. **Our location penalties were timid by a factor of ten.** Vanilla
+    `great_pestilence`'s `location_modifier` carries
+    `local_population_growth = -0.1`. Ours carried −0.008. The engine plainly
+    tolerates penalties far past anything in the static-modifier files. Raised
+    to −0.05, plus the attrition and pop-demotion terms vanilla and M&T's
+    bubonic plague both use.
+
+14. **`disease_resistance(scope:disease)` is readable in script**, and vanilla
+    uses it three ways: gating spawn (`< 0.5`), suppressing `r0` above 0.5, and
+    escalating stagnation chance above 0.95 and 0.98. Bubonic plague's
+    post-Black-Death recurrence at **0.005/month** — "should happen around once
+    per 20 years" — is direct vanilla precedent for our 0.004 cocoliztli
+    cadence.
+
+    We deliberately do *not* gate cocoliztli's spawn on low resistance the way
+    vanilla does. The 1576 wave killed survivors of 1545; that is the entire
+    point of the disease.
+
 ## The growth arithmetic
 
 Per-year `local_population_growth`, for a depopulated central Mexican location
@@ -210,8 +262,14 @@ above is therefore a table of *modifiers*, not of net growth. Finding the
 baseline would pin the arithmetic down completely.
 
 **How resistance is acquired.** Still not found. `local_disease_resistance`
-scales it, and `monthly_resistance_reduction` decays it, but the gain on
-surviving a mortality roll is neither. Likely a define.
+scales it, `monthly_resistance_reduction` decays it, and
+`disease_resistance(scope:disease)` reads it — but the gain on surviving a
+mortality roll is none of those. Likely a define.
+
+**Whether vanilla `great_pestilence` can be un-deleted from a submod.** M&T
+suppresses it with an empty same-path file. Whether a submod loading after
+M&T can restore the entry by shipping the original content at that path
+depends on override semantics we haven't tested.
 
 ## Sources
 
