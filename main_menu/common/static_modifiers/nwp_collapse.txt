@@ -29,6 +29,13 @@ nwp_agricultural_collapse = {
 	local_population_capacity_modifier = -0.25
 	local_monthly_development = -0.004
 	local_prosperity_decay = 0.15
+
+	# The real weapon. Vanilla's province_starving is untouched by M&T and
+	# carries local_population_growth = -0.025 - roughly 17x Abundant Free
+	# Land's +1.5%. We do not need to out-tune the growth spring; we need to
+	# stop the location feeding itself and let vanilla's own starvation
+	# mechanism do the work. Cf. scorched_earth (-0.5), russian_famine (-0.75).
+	local_monthly_food_modifier = -0.35
 }
 
 # The heavier version, for locations under an Old World overlord running
@@ -42,4 +49,5 @@ nwp_colonial_labour_regime = {
 	local_monthly_development = -0.006
 	local_prosperity_decay = 0.25
 	local_migration_attraction = -15.0
+	local_monthly_food_modifier = -0.5
 }

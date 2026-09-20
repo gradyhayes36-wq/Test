@@ -63,6 +63,36 @@ the plan:
    `cap_maximum_population_growth_at_zero` commented out, replaced with
    `local_population_growth = -0.005`).
 
+8. **Starvation is a bigger hammer than anything we could write.** Vanilla's
+   `province_starving` (`docs/vanilla-reference/province.txt`) carries
+   `local_population_growth = -0.025`, plus `local_life_expectancy = -10` and
+   `local_upper_class_capacity_modifier = -0.5`. M&T does not override it.
+   That is roughly 17x Abundant Free Land's +1.5%, in the opposite direction.
+
+   This reorders the lever menu. We do not have to out-tune the growth spring
+   with hand-written penalties; we have to stop a collapsed location feeding
+   itself and let vanilla's own starvation code do the work. Food moves from
+   third-choice lever to primary mechanism.
+
+9. **The farming-village system makes that historically exact.** M&T's
+   `mnt_food.1` builds one `farming_village` per 2,500 peasants **at startup
+   only**, each granting `local_food_capacity = 20`. The regeneration path
+   (`mnt_food.2`) is gated on `is_ai = yes`, `monthly_income_total > 15` and
+   ≥800 unemployed pops for the building — gates a depopulated colonial
+   backwater plausibly fails. `mnt_food.3` actively *destroys* surplus
+   villages.
+
+   So the spec's §4.3 worry — that the scripted system would just rebuild them
+   — is answered: probably not, for exactly the locations we care about. And
+   destroying farming villages in cocoliztli-struck locations *is* the
+   historical mechanism, not a proxy for it: chinampas, terraces and irrigation
+   going unmaintained because the maintainers were dead. It also
+   self-reinforces — fewer villages, less food capacity, starvation, negative
+   growth, fewer peasants.
+
+   Caveat: that regeneration path is AI-only, so a human-played Spain will
+   behave differently from an observer run.
+
 ## What's here
 
 | File | Job |
@@ -90,6 +120,9 @@ escape.
   Great Pestilence map mode, `can_end` check and event targeting won't see
   cocoliztli. Deliberate for v0 — it keeps the Situation's lifecycle
   untouched — but it means no map colour inside the Situation view.
+- **Destroying farming villages is designed but not implemented.** This is
+  now the primary suppression mechanism (finding 9) and needs the same event
+  hook the collapse modifiers need.
 - **No localisation.** Disease name, modifier names, map legend.
 - **`relationships` schema in `.metadata/metadata.json` is unverified.** M&T's
   own metadata has an empty array, so it demonstrates nothing. Check a
@@ -110,6 +143,14 @@ After: observer run, checkpoint central Mexico at 1550 / 1600 / 1700 / 1800.
 Watch for a location with mortality applied but max pop untouched — you'll kill
 19 million and watch them regrow, because the soft cap is still up there pulling
 them back.
+
+## Still unknown
+
+The free-land brackets themselves. They are **not** in vanilla
+`static_modifiers/province.txt` — that file is province-category, and free land
+is location-category, so they will be in the sibling `location.txt`. Until that
+file is read, §3 of the design spec (the +1.5% / +0.25% figures and the
+10K-pop / 10%-capacity thresholds) remains unverified.
 
 ## Sources
 

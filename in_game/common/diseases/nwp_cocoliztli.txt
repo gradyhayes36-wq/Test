@@ -126,6 +126,12 @@ cocoliztli = {
 		local_prosperity_decay = 0.3
 		local_monthly_development = -0.005
 		local_migration_attraction = -20.0
+
+		# Fields go unworked during a wave. This is also what pushes a
+		# location toward vanilla's province_starving, which carries
+		# local_population_growth = -0.025 - far heavier than anything
+		# worth writing by hand here.
+		local_monthly_food_modifier = -0.3
 	}
 
 	# The 1576 wave killed survivors of 1545. Resistance must not carry over

@@ -37,3 +37,11 @@ nwp_cocoliztli_resistance_decay = 0.004
 # main_menu/common/static_modifiers/nwp_collapse.txt for the persistent half.
 nwp_collapse_growth_penalty = -0.008
 nwp_collapse_capacity_penalty = -0.25
+
+# --- Food suppression ---------------------------------------------------
+# Not currently referenced (the food penalties are literal in the disease and
+# modifier files), kept here as the record of what the vanilla scale looks
+# like: scorched_earth -0.5, russian_famine -0.75, short_harvest -0.5,
+# bountiful_harvest +0.25. Starvation itself is vanilla province_starving:
+# local_population_growth = -0.025, local_life_expectancy = -10,
+# local_upper_class_capacity_modifier = -0.5. M&T does not override it.
