@@ -1,0 +1,85 @@
+﻿# A NEW Situation, not an override of M&T's.
+#
+# This exists to be a periodic hook we fully own. M&T's great_pestilence and
+# columbian_exchange situations already coexist, so situations are additive by
+# construction: a new key cannot collide with anything, and on_monthly gives a
+# guaranteed sweep without touching M&T's on_action lists.
+#
+# It also states the design target directly. The Situation IS the suppression
+# window: while it runs, New World locations are virgin soil and cannot
+# recover. It ending is recovery beginning, which is why can_end is a date
+# rather than a condition - the design spec's hardest requirement is that
+# recovery must not start before ~1700.
+
+nwp_demographic_collapse = {
+	monthly_spawn_chance = monthly_spawn_chance_unique
+	hint_tag = hint_nwp_demographic_collapse
+
+	can_start = {
+		#Any location in america has an owner of the old world
+		continent:america = {
+			any_location_in_continent = {
+				population > 0
+				owner_from_old_world = yes
+			}
+		}
+	}
+
+	can_end = {
+		# Mexico sat at the floor for roughly 150 years. Recovery begins when
+		# this Situation ends, so this date is the single most important
+		# number in the submod. Cook & Borah's series bottoms out around 1620
+		# and does not turn up meaningfully until the eighteenth century.
+		current_date > 1730.1.1
+	}
+
+	visible = {
+		OR = {
+			has_variable = nwp_in_demographic_collapse
+			capital = { continent = continent:america }
+		}
+	}
+
+	on_start = {
+		set_variable = { name = nwp_collapse_started value = yes }
+	}
+
+	on_monthly = {
+		every_ownable_location = {
+			limit = {
+				continent = continent:america
+				population > 0
+				NOT = { has_variable = nwp_virgin_soil_applied }
+				# Susceptibility is about prior exposure, not ownership: the
+				# pops are the reason, so gate on them rather than on who
+				# happens to hold the location.
+				any_pop = {
+					culture = { is_culture_native_american = yes }
+				}
+			}
+			set_variable = nwp_virgin_soil_applied
+			add_location_modifier = {
+				modifier = nwp_virgin_soil
+				days = -1
+			}
+		}
+	}
+
+	on_ended = {
+		every_ownable_location = {
+			limit = {
+				continent = continent:america
+				has_variable = nwp_virgin_soil_applied
+			}
+			remove_variable = nwp_virgin_soil_applied
+			remove_location_modifier = nwp_virgin_soil
+		}
+	}
+
+	tooltip = {
+		if = {
+			limit = { has_location_modifier = nwp_virgin_soil }
+			custom_tooltip = "NWP_VIRGIN_SOIL_PRESENT"
+		}
+	}
+}

@@ -1,4 +1,4 @@
-# Cocoliztli - https://en.wikipedia.org/wiki/Cocoliztli_epidemics
+﻿# Cocoliztli - https://en.wikipedia.org/wiki/Cocoliztli_epidemics
 # New disease, additive. No REPLACE:/INJECT: prefix because nothing in vanilla
 # or M&T defines this key.
 #
@@ -181,7 +181,12 @@ cocoliztli = {
 		multiply = "disease_presence(scope:disease)"
 	}
 
+	# The hook. This lives inside our own disease definition, so it needs no
+	# on_action entry and cannot collide with M&T's lists. Root is the
+	# country; nwp.1 sweeps its American locations and stamps the persistent
+	# collapse modifiers. See in_game/events/nwp_collapse_events.txt.
 	on_spread_to_country = {
+		trigger_event_silently = nwp.1
 	}
 
 	map_color = {

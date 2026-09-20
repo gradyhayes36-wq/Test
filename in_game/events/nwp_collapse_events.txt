@@ -1,0 +1,64 @@
+﻿namespace = nwp
+
+# Stamped when cocoliztli reaches a country, from the disease's own
+# on_spread_to_country hook - see in_game/common/diseases/nwp_cocoliztli.txt.
+#
+# This hook lives INSIDE our own disease definition, so it needs no on_action
+# entry and cannot collide with M&T's. Root scope is the country.
+# Location sweep idiom copied from M&T's mnt_centers.1.
+nwp.1 = {
+	type = country_event
+	title = hidden_event.t
+	hidden = yes
+
+	immediate = {
+		every_owned_location = {
+			limit = {
+				continent = continent:america
+				population > 1
+				disease_presence = {
+					disease = disease:cocoliztli
+					value > 0.1
+				}
+				NOT = { has_location_modifier = nwp_agricultural_collapse }
+			}
+
+			# The maintainers are dead and the fields go with them. Long
+			# duration: Mexico sat at the floor for roughly 150 years, and a
+			# modifier measured in decades would expire well before 1700.
+			add_location_modifier = {
+				modifier = nwp_agricultural_collapse
+				years = 100
+				mode = replace
+			}
+
+			# Under an Old World overlord, congregacion and forced labour
+			# stack on top of the epidemic itself.
+			if = {
+				limit = { owner_from_old_world = yes }
+				add_location_modifier = {
+					modifier = nwp_colonial_labour_regime
+					years = 100
+					mode = replace
+				}
+			}
+
+			# Chinampas, terraces and irrigation stop being maintained.
+			# This is the mechanism, not a proxy for it: farming villages are
+			# built one per 2,500 peasants at startup only (M&T mnt_food.1),
+			# and the regeneration path (mnt_food.2) is gated on AI ownership,
+			# monthly_income_total > 15 and >=800 unemployed pops - gates a
+			# collapsed location plausibly fails.
+			if = {
+				limit = {
+					has_building_with_at_least_one_level = farming_village
+					disease_presence = {
+						disease = disease:cocoliztli
+						value > 0.4
+					}
+				}
+				destroy_building = "building(building_type:farming_village|owner)"
+			}
+		}
+	}
+}

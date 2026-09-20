@@ -1,4 +1,4 @@
-# New World Pestilence - all tunables in one place.
+﻿# New World Pestilence - all tunables in one place.
 # Every number here is a guess until an observer run says otherwise. Tune these,
 # not the disease file.
 

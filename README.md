@@ -129,6 +129,9 @@ the plan:
 | `in_game/common/diseases/nwp_cocoliztli.txt` | Half B. Recurring, barely-immunising, 30–50% mortality, New World only, gated on its own date window so it outlives the Situation. |
 | `main_menu/common/static_modifiers/nwp_collapse.txt` | Half A. Two location modifiers for the persistent carrying-capacity collapse. |
 | `in_game/common/script_values/nwp_tuning.txt` | Every tunable number, in one file. Tune here, not in the disease. |
+| `in_game/events/nwp_collapse_events.txt` | `nwp.1`, fired from the disease's own `on_spread_to_country`. Stamps the collapse modifiers and destroys farming villages. |
+| `in_game/common/situations/nwp_demographic_collapse.txt` | A new Situation whose `on_monthly` applies `nwp_virgin_soil`. Its end date is when recovery begins. |
+| `main_menu/localization/english/nwp_l_english.yml` | Names for the disease, situation and modifiers. |
 
 The recurrence is the load-bearing idea: a disease that fires once and kills 90%
 is both ahistorical and maximally arms the free-land spring. A disease returning
@@ -152,13 +155,18 @@ escape.
 - **Destroying farming villages is designed but not implemented.** This is
   now the primary suppression mechanism (finding 9) and needs the same event
   hook the collapse modifiers need.
-- **No localisation.** Disease name, modifier names, map legend.
 - **`relationships` schema in `.metadata/metadata.json` is unverified.** M&T's
   own metadata has an empty array, so it demonstrates nothing. Check a
   known-good submod before trusting it.
 - **Script-value references inside disease fields are unverified.** M&T's
-  disease files use literals throughout. If `value = nwp_cocoliztli_spawn_strength`
-  doesn't resolve, inline the numbers.
+  disease files use literals throughout, and so do vanilla's. If
+  `value = nwp_cocoliztli_spawn_strength` doesn't resolve, inline the numbers.
+- **`monthly_spawn_chance_unique` is assumed to be a vanilla script value.**
+  Both M&T situations use it and neither defines it. If it isn't, the new
+  Situation won't load.
+- **The 100-year modifier duration is a guess**, as is whether `mode = replace`
+  refreshes the clock on a later wave. If it doesn't, a second wave won't
+  extend the first wave's collapse.
 
 ## Validating
 

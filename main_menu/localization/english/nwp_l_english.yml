@@ -1,0 +1,18 @@
+﻿l_english:
+ ### New World Pestilence
+
+ # Disease
+ cocoliztli: "Cocoliztli"
+ cocoliztli_desc: "A haemorrhagic fever that swept New Spain in 1545 and again in 1576, killing those who had survived the earlier wave. Ancient DNA from Teposcolula-Yucundaa implicates Salmonella enterica Paratyphi C."
+
+ # Situation
+ nwp_demographic_collapse: "Demographic Collapse"
+ nwp_demographic_collapse_desc: "The peoples of the New World have no prior exposure to Old World crowd diseases, and the agricultural landscape that fed them is going unmaintained."
+ hint_nwp_demographic_collapse: "Demographic Collapse"
+ hint_nwp_demographic_collapse_hint_text: "New World locations are virgin soil for Old World diseases, and their agriculture is collapsing faster than their population."
+ NWP_VIRGIN_SOIL_PRESENT: "This location has no acquired resistance to Old World diseases"
+
+ # Modifiers
+ nwp_virgin_soil: "Virgin Soil"
+ nwp_agricultural_collapse: "Agricultural Collapse"
+ nwp_colonial_labour_regime: "Colonial Labour Regime"

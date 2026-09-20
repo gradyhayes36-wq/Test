@@ -1,4 +1,4 @@
-# New World Pestilence - carrying-capacity collapse.
+﻿# New World Pestilence - carrying-capacity collapse.
 #
 # Half A of the design: the thing that stops the rebound. Disease is
 # subtraction; EU5's free-land growth brackets are a spring, and emptying a
