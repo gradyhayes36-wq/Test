@@ -43,6 +43,39 @@ step fails.
 `README.md`, `VALIDATION.md`, `INSTALL.md` and `docs/` are documentation. The
 game ignores them, so copying them is harmless; leaving them out is tidier.
 
+## If the launcher doesn't list the mod at all
+
+Two causes account for almost all of it.
+
+**The metadata file must have a UTF-8 BOM.** M&T's `metadata.json` starts with
+`EF BB BF`; their CI enforces BOM on every file in the repo. A metadata file
+the parser cannot read means the mod is silently absent — no error, it simply
+is not there. Check:
+
+```powershell
+$p = "$env:USERPROFILE\Documents\Paradox Interactive\Europa Universalis V\mod\New-World-Pestilence\.metadata\metadata.json"
+Test-Path $p
+Format-Hex $p | Select-Object -First 1
+```
+
+`Test-Path` must print `True`, and the first three bytes must be `EF BB BF`.
+
+**The folder must not be nested.** A GitHub ZIP extracts to a wrapper folder,
+so it is easy to end up with
+`mod\New-World-Pestilence\Test-claude-eu5-.../.metadata\`, one level too
+deep. `.metadata` has to sit directly inside the folder you put in `mod\`:
+
+```powershell
+Get-ChildItem "$env:USERPROFILE\Documents\Paradox Interactive\Europa Universalis V\mod\New-World-Pestilence" -Force
+```
+
+`-Force` is needed to show `.metadata`, which is hidden. You should see
+`.metadata`, `in_game` and `main_menu` at that level. If instead you see a
+single subfolder, move everything up one level.
+
+Compare against `MnT-EU5` in the same directory — it works, so it is the
+reference for what the launcher expects.
+
 ## 3. Set the load order
 
 In the launcher, make a playset containing **both** M&T and this, with this one
@@ -50,11 +83,11 @@ In the launcher, make a playset containing **both** M&T and this, with this one
 replacement resolve in load order, so a submod loading before its parent does
 nothing.
 
-`.metadata/metadata.json` declares a dependency on `meiou_and_taxes`, which
-should enforce that automatically. **That schema is unverified** — M&T's own
-`relationships` array is empty, so it demonstrates nothing. If the launcher
-rejects the mod or complains about the field, delete the whole `relationships`
-block and order the two by hand instead.
+`metadata.json` ships with an **empty** `relationships` array, matching M&T's
+own file. An earlier version declared a dependency on `meiou_and_taxes` using
+an invented schema; since M&T's array is empty there was nothing to copy from,
+and a malformed entry is a plausible way to make the launcher drop the mod. So
+the load order is yours to set manually in the playset — drag this below M&T.
 
 ## 4. Expect it to fail the first time
 

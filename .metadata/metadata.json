@@ -1,4 +1,4 @@
-{
+﻿{
   "name" : "New World Pestilence",
   "id" : "mnt_new_world_pestilence",
   "version" : "0.1.0",
@@ -6,12 +6,6 @@
   "supported_game_version" : "1.3.*",
   "short_description" : "Recurring cocoliztli epidemics and post-contact carrying-capacity collapse for MEIOU & Taxes.",
   "tags" : [],
-  "relationships" : [
-    {
-      "id" : "meiou_and_taxes",
-      "relationship" : "dependency",
-      "display_name" : "MEIOU and Taxes"
-    }
-  ],
+  "relationships" : [],
   "game_custom_data" : {}
 }
