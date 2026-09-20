@@ -23,7 +23,7 @@ is a real region — M&T's own great_pestilence situation checks it by name —
 so central Mexico's population is a single greppable field, every year,
 automatically.
 
-## Procedure
+## Procedure (M&T's logger — see the caveat below first)
 
 1. **Enable it.** `LOGGER_CHARTS.01` is marked `orphan = yes`, so it can be
    fired from the console:
@@ -60,6 +60,61 @@ automatically.
 4. **Plot it, or read it.** `tools/plot/log_parser.py` already parses `::POP::`
    with `r"::POP::(\d+):(.+?):([\d.,MK]+)"` and `tools/plot/MT_grapher.py`
    graphs it. Or just read the numbers.
+
+## M&T's population logger appears to be broken on 1.3
+
+A log from a live 1677 save, filtered for `Mesoamerica`, returned `::GP::`
+(prices) and `::RT::` (roads) records and **no `::POP::` at all** — and no
+`::BT:` either.
+
+The line numbers are the evidence. The first `Mesoamerica` price hit was at
+`error.log:81`, and subsequent ones at 163, 245, 327 — exactly 82 apart, one
+good's full region loop. So `::GP::` is the first thing in the file. But
+`run_logging` calls `print_regional_building_types` and
+`print_regional_population` *before* prices, and M&T's own comment measures the
+building-types output at 147,474 characters. Had those run, thousands of lines
+would precede line 81.
+
+Corroborating: in `print_country_information`, the main `::TG::` line is
+commented out in M&T's source. These loggers do rot against game updates.
+
+Confirm with:
+
+```powershell
+Select-String "::POP::" error.log | Measure-Object
+Select-String "::BT:"   error.log | Measure-Object
+Get-Content error.log -Head 40
+```
+
+## Fallback: this submod's own census
+
+`nwp.9` in `in_game/events/nwp_collapse_events.txt` is a console-fired census,
+built only from patterns observed working in that same log:
+
+| Pattern | Observed output |
+|---|---|
+| `[GetCurrentYear]` | `1677` |
+| `[THIS.GetRegion.GetNameWithNoTooltip]` | `Mesoamerica` |
+| `[SCOPE.GetLocalVariable('x').GetValue]` | price values |
+
+It sums `population` over `every_ownable_location_in_region` into a local
+variable rather than calling `GetTotalPopulation`, which is the one promote
+`print_regional_population` uses that this does not — and therefore the prime
+suspect.
+
+```
+event nwp.9
+```
+
+then
+
+```powershell
+Select-String "::NWPPOP::" error.log
+```
+
+It is `orphan = yes`, so it fires from the console on demand at any date,
+against any save, with no pulse or situation required. Output is one line per
+region — about 40 lines, not 900KB.
 
 ## Reading the result
 
