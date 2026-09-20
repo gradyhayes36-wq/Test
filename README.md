@@ -56,12 +56,41 @@ the plan:
 6. **`malaria` proves the shape is legal**: `mortality_rate = { 0.85 0.95 }`,
    `monthly_resistance_reduction = 0`, spread environmentally rather than by R0.
 
-7. **M&T does not touch the free-land static modifiers.** Zero hits for
-   `free_land` anywhere in the repo, so vanilla's brackets presumably stand —
-   but they can't be confirmed without the vanilla install. M&T *did* rewrite
-   the overpopulation soft cap (`MnT_location.txt`: vanilla's
-   `cap_maximum_population_growth_at_zero` commented out, replaced with
-   `local_population_growth = -0.005`).
+7. **The free-land brackets are confirmed, and the spring is weaker than the
+   spec assumed.** From vanilla `location.txt`:
+
+   ```
+   available_free_land  = { local_population_growth = 0.0025 }
+   # when its <10% capacity & <10k
+   abundant_free_land   = { local_population_growth = 0.015  }
+   ```
+
+   The design spec's §3 figures were right. But the vanilla comment spells out
+   that `abundant_free_land` requires **both** conditions — under 10% of
+   capacity **and** under 10,000 pops. A central Mexican location falling from
+   200K to 20K is still over 10K, so it does *not* get the +1.5%. It gets
+   `available_free_land`'s +0.25%.
+
+   That cuts the rebound problem down substantially, and it introduces a trap
+   worth naming: **over-killing is what arms the spring.** Drive a location
+   below 10K and it drops into the +1.5% bracket and rockets back. One
+   apocalyptic wave is therefore worse than several moderate ones not only
+   historically but mechanically — which is an argument for the recurring
+   design in finding 3, arrived at from a different direction.
+
+   M&T does not override either bracket. It *did* rewrite the overpopulation
+   soft cap (vanilla's `cap_maximum_population_growth_at_zero` commented out,
+   replaced with `local_population_growth = -0.005`).
+
+10. **`local_disease_resistance` exists as a modifier type, and vanilla already
+    uses it for this exact scenario.** `spa_severe_smallpox_outbreak` carries
+    `local_disease_resistance = -0.75`; `spa_mild_smallpox_outbreak` carries
+    -0.25. M&T uses the positive direction on town buildings (+0.1 to +0.33).
+
+    This is a cleaner statement of "virgin soil" than anything in the design
+    spec: applying it to American locations makes the *existing* three diseases
+    far deadlier there without editing their global definitions and breaking the
+    Old World balance M&T tuned them for. Added as `nwp_virgin_soil`.
 
 8. **Starvation is a bigger hammer than anything we could write.** Vanilla's
    `province_starving` (`docs/vanilla-reference/province.txt`) carries
@@ -144,13 +173,45 @@ Watch for a location with mortality applied but max pop untouched — you'll kil
 19 million and watch them regrow, because the soft cap is still up there pulling
 them back.
 
+## The growth arithmetic
+
+Per-year `local_population_growth`, for a depopulated central Mexican location
+that is still above 10K pops:
+
+| Source | Value |
+|---|---|
+| `available_free_land` | **+0.0025** |
+| `abundant_free_land` (only if also under 10K pops) | **+0.015** |
+| `devastation` at maximum | −0.005 |
+| `looted` | −0.005 |
+| `expensive_food_in_location` | −0.001 |
+| `nwp_colonial_labour_regime` (ours) | −0.008 |
+| **`province_starving`** | **−0.025** |
+
+Two things fall out of this table.
+
+**Prosperity and devastation cannot do the job.** The design spec ranked them
+lever 1, most-trusted. But vanilla `devastation` is written as positive values
+multiplied by a devastation scalar of 0 to −1, so its floor is −0.005; and
+`prosperity` ranges 0 to 1, so losing all of it costs +0.002, not a negative.
+Devastation plus our own heaviest hand-written modifier is −0.013 against
++0.015 — it loses to a bracket we didn't even want to be in.
+
+**Starvation is the only lever that decisively wins**, at −0.025 on its own.
+Which is why the food mechanism in findings 8 and 9 is the design, and the
+rest is support.
+
 ## Still unknown
 
-The free-land brackets themselves. They are **not** in vanilla
-`static_modifiers/province.txt` — that file is province-category, and free land
-is location-category, so they will be in the sibling `location.txt`. Until that
-file is read, §3 of the design spec (the +1.5% / +0.25% figures and the
-10K-pop / 10%-capacity thresholds) remains unverified.
+**Baseline pop growth.** `location_base_values` in vanilla `location.txt`
+contains no `local_population_growth` at all, so the ~0.2% baseline the design
+spec assumes comes from somewhere else — defines or script values. The table
+above is therefore a table of *modifiers*, not of net growth. Finding the
+baseline would pin the arithmetic down completely.
+
+**How resistance is acquired.** Still not found. `local_disease_resistance`
+scales it, and `monthly_resistance_reduction` decays it, but the gain on
+surviving a mortality roll is neither. Likely a define.
 
 ## Sources
 

@@ -51,3 +51,27 @@ nwp_colonial_labour_regime = {
 	local_migration_attraction = -15.0
 	local_monthly_food_modifier = -0.5
 }
+
+
+# Virgin-soil susceptibility.
+#
+# `local_disease_resistance` is a real modifier type, and vanilla already uses
+# it for exactly this purpose: `spa_severe_smallpox_outbreak` carries
+# -0.75, `spa_mild_smallpox_outbreak` -0.25 (see
+# docs/vanilla-reference/location.txt). M&T uses the positive direction on
+# town buildings (hospitals etc., +0.1 to +0.33).
+#
+# This is the cleanest statement of the historical fact: New World pops had no
+# prior exposure to Old World crowd diseases. Applying it to American locations
+# makes the EXISTING smallpox/measles/influenza far deadlier there without
+# editing their definitions, which would change them globally and break the
+# Old World balance M&T tuned them for.
+#
+# NOT YET APPLIED BY ANYTHING - same hook problem as the collapse modifiers.
+nwp_virgin_soil = {
+	game_data = {
+		category = location
+	}
+	local_disease_resistance = -0.75
+	local_life_expectancy = -10
+}
