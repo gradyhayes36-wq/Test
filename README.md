@@ -122,6 +122,11 @@ the plan:
    Caveat: that regeneration path is AI-only, so a human-played Spain will
    behave differently from an observer run.
 
+## Installing
+
+See **[INSTALL.md](INSTALL.md)**. It is a separate mod loading after M&T, not
+an overlay onto M&T's folder.
+
 ## What's here
 
 | File | Job |
