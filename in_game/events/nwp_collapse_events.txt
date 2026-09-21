@@ -206,3 +206,73 @@ nwp.9 = {
 		error_log = "::NWPPOP::done"
 	}
 }
+
+# =====================================================================
+# Debug harness. Both are orphan = yes, so they fire from the console at
+# any date against any save, and both bypass the contact gating entirely.
+#
+# The point is to test the two halves of the design SEPARATELY, in minutes,
+# without colonising anything or running a campaign. If half B works and
+# half A does not, that is a different fix from the reverse, and a long run
+# with both active cannot tell them apart.
+# =====================================================================
+
+# HALF B: is cocoliztli lethal enough?
+#   event nwp.7   then run ~10 years and compare nwp.9 census against baseline.
+# Force-spawns at full presence in Mesoamerica, skipping monthly_spawn_chance
+# and every spawn-block condition. spawn_disease in an effect context is the
+# same idiom M&T's great_pestilence situation uses in its on_start.
+nwp.7 = {
+	type = country_event
+	title = hidden_event.t
+	hidden = yes
+	orphan = yes
+
+	immediate = {
+		region:mesoamerica_region = {
+			random_ownable_location_in_region = {
+				limit = { population > 1 }
+				spawn_disease = {
+					disease = disease:cocoliztli
+					value = 1
+				}
+				error_log = "::NWPLOG::[GetCurrentYear]:DEBUG force-spawned cocoliztli in Mesoamerica"
+			}
+		}
+	}
+}
+
+# HALF A: do the collapse modifiers actually suppress?
+#   event nwp.6   then run ~20 years and compare nwp.9 census against baseline.
+# Stamps every Mesoamerican location directly, skipping the Situation, the
+# disease and the dominant_culture test. Isolates the modifiers' arithmetic
+# from everything that has to work for them to be applied normally.
+nwp.6 = {
+	type = country_event
+	title = hidden_event.t
+	hidden = yes
+	orphan = yes
+
+	immediate = {
+		set_local_variable = { name = nwp_dbg value = 0 }
+		region:mesoamerica_region = {
+			every_ownable_location_in_region = {
+				limit = { population > 0 }
+				add_location_modifier = { modifier = nwp_virgin_soil days = -1 }
+				add_location_modifier = {
+					modifier = nwp_agricultural_collapse
+					years = 100
+					mode = replace
+				}
+				add_location_modifier = {
+					modifier = nwp_colonial_labour_regime
+					years = 100
+					mode = replace
+				}
+				change_local_variable = { name = nwp_dbg add = 1 }
+			}
+		}
+		error_log = "::NWPLOG::[GetCurrentYear]:DEBUG stamped collapse modifiers on [SCOPE.GetLocalVariable('nwp_dbg').GetValue] Mesoamerican locations"
+		remove_local_variable = nwp_dbg
+	}
+}
