@@ -175,6 +175,31 @@ nwp_demographic_collapse = {
 			}
 		}
 
+		# Colonial labour regime, decoupled from the disease.
+		#
+		# MEASURED 1533: labour_regime=0 across the whole hemisphere, because
+		# this modifier was nested inside the disease-presence block and
+		# cocoliztli never happened to reach a colonised location. Post-wave
+		# Mesoamerica then ran at -0.159%/yr against the -1.41%/yr measured
+		# when all three modifiers were active.
+		#
+		# Encomienda and repartimiento are consequences of colonial RULE, not
+		# of an active epidemic. Gate them on ownership, as history does.
+		every_ownable_location = {
+			limit = {
+				continent = continent:america
+				population > 1
+				owner_from_old_world = yes
+				dominant_culture = { is_culture_native_american = yes }
+				NOT = { has_location_modifier = nwp_colonial_labour_regime }
+			}
+			add_location_modifier = {
+				modifier = nwp_colonial_labour_regime
+				years = 100
+				mode = replace
+			}
+		}
+
 		# Keep the Situation visible to countries that lived through it, the
 		# way M&T's great_pestilence uses had_great_pestilence.
 		every_country = {
