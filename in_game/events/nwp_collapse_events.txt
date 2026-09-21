@@ -190,7 +190,33 @@ nwp.9 = {
 				}
 			}
 		}
+		# Every disease, not just ours. nwp_virgin_soil drops
+		# local_disease_resistance by 0.75 across the Americas, which makes the
+		# EXISTING diseases deadlier too - and malaria is endemic, environmental
+		# and carries mortality { 0.85 0.95 }. If population falls before
+		# cocoliztli has spawned, this line says which disease did it.
+		set_local_variable = {
+			name = nwp_n_mal
+			value = { every_ownable_location = { limit = { disease_presence = { disease = disease:malaria value > 0 } } add = 1 } }
+		}
+		set_local_variable = {
+			name = nwp_n_sp
+			value = { every_ownable_location = { limit = { disease_presence = { disease = disease:smallpox value > 0 } } add = 1 } }
+		}
+		set_local_variable = {
+			name = nwp_n_me
+			value = { every_ownable_location = { limit = { disease_presence = { disease = disease:measles value > 0 } } add = 1 } }
+		}
+		set_local_variable = {
+			name = nwp_n_fl
+			value = { every_ownable_location = { limit = { disease_presence = { disease = disease:influenza value > 0 } } add = 1 } }
+		}
 		error_log = "::NWPSTAT::[GetCurrentYear]:virgin_soil=[SCOPE.GetLocalVariable('nwp_n_vs').GetValue]:agri_collapse=[SCOPE.GetLocalVariable('nwp_n_ac').GetValue]:labour_regime=[SCOPE.GetLocalVariable('nwp_n_cl').GetValue]:cocoliztli_locs=[SCOPE.GetLocalVariable('nwp_n_coc').GetValue]"
+		error_log = "::NWPDIS::[GetCurrentYear]:malaria=[SCOPE.GetLocalVariable('nwp_n_mal').GetValue]:smallpox=[SCOPE.GetLocalVariable('nwp_n_sp').GetValue]:measles=[SCOPE.GetLocalVariable('nwp_n_me').GetValue]:influenza=[SCOPE.GetLocalVariable('nwp_n_fl').GetValue]"
+		remove_local_variable = nwp_n_mal
+		remove_local_variable = nwp_n_sp
+		remove_local_variable = nwp_n_me
+		remove_local_variable = nwp_n_fl
 		if = {
 			limit = { is_situation_active = situation:nwp_demographic_collapse }
 			error_log = "::NWPSTAT::situation nwp_demographic_collapse ACTIVE"
