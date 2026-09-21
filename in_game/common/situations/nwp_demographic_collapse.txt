@@ -62,7 +62,7 @@ nwp_demographic_collapse = {
 	# root = situation
 	on_start = {
 		set_variable = { name = nwp_collapse_started value = yes }
-		error_log = "::NWPLOG::[GetCurrentYear]:situation nwp_demographic_collapse STARTED"
+		error_log = "::NWPLOG::situation nwp_demographic_collapse STARTED"
 	}
 
 	# root = situation
@@ -134,6 +134,47 @@ nwp_demographic_collapse = {
 			remove_local_variable = nwp_trk_ac
 		}
 
+		# Collapse stamping. This lives here rather than only in nwp.1 because
+		# a country-spread event is a single instant, while a wave moves through
+		# locations over months. Measured 1503: 37 spread events stamped 25 of
+		# 325 locations. A monthly sweep catches each location while the disease
+		# is actually present in it.
+		every_ownable_location = {
+			limit = {
+				continent = continent:america
+				population > 1
+				dominant_culture = { is_culture_native_american = yes }
+				disease_presence = {
+					disease = disease:cocoliztli
+					value > 0.1
+				}
+				NOT = { has_location_modifier = nwp_agricultural_collapse }
+			}
+			add_location_modifier = {
+				modifier = nwp_agricultural_collapse
+				years = 100
+				mode = replace
+			}
+			if = {
+				limit = { owner_from_old_world = yes }
+				add_location_modifier = {
+					modifier = nwp_colonial_labour_regime
+					years = 100
+					mode = replace
+				}
+			}
+			if = {
+				limit = {
+					has_building_with_at_least_one_level = farming_village
+					disease_presence = {
+						disease = disease:cocoliztli
+						value > 0.4
+					}
+				}
+				destroy_building = "building(building_type:farming_village|owner)"
+			}
+		}
+
 		# Keep the Situation visible to countries that lived through it, the
 		# way M&T's great_pestilence uses had_great_pestilence.
 		every_country = {
@@ -150,7 +191,7 @@ nwp_demographic_collapse = {
 
 	# root = situation
 	on_ended = {
-		error_log = "::NWPLOG::[GetCurrentYear]:situation nwp_demographic_collapse ENDED"
+		error_log = "::NWPLOG::situation nwp_demographic_collapse ENDED"
 		every_ownable_location = {
 			limit = {
 				continent = continent:america

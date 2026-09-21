@@ -183,6 +183,21 @@ Cocoliztli went extinct without spreading — its r0, spread threshold and calc
 interval had all been set below M&T's smallpox. Fixed by adopting smallpox's
 proven spread profile and keeping only the lethality and resistance changes.
 
+## Status: both halves demonstrated
+
+`docs/measurements/production-test-1503.md`. With the spread fix, cocoliztli
+established and spread — 37 country-spreads in its first year — taking
+Mesoamerica from 11,768.4k to **7,482.0k by 1503, −36.4% in fifteen years and
+39% below the control trend**. That was the disease's own mortality: only 25 of
+325 locations were stamped and capacity did not move.
+
+Combined with the earlier debug run, where the modifiers alone held a
+steady −1.41%/yr, both halves are now independently shown to work.
+
+The flaw found was **coverage** — `nwp.1` only saw locations infected at the
+instant a country was reached. Stamping moved into the Situation's monthly
+sweep.
+
 ## Before playtesting
 
 See **[PLAYTEST.md](PLAYTEST.md)**. Nothing but `nwp.9` has ever executed, so
