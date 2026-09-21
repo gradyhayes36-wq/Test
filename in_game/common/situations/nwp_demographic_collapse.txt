@@ -89,6 +89,29 @@ nwp_demographic_collapse = {
 			}
 		}
 
+		# The lift, part two. The collapse modifiers had no removal pass at all,
+		# so a location stamped while native-majority kept -1.8%/yr growth and
+		# roughly -85% capacity for a hundred years even after it had become a
+		# settler colony. That made European colonisation of any densely
+		# populated region pointless until 1600.
+		#
+		# Historically the right reading: once a location is settler-majority
+		# the indigenous agricultural order this models is not collapsing any
+		# more, it has been replaced. Encomienda over a population that is no
+		# longer there is not a thing.
+		every_ownable_location = {
+			limit = {
+				continent = continent:america
+				NOT = { dominant_culture = { is_culture_native_american = yes } }
+				OR = {
+					has_location_modifier = nwp_agricultural_collapse
+					has_location_modifier = nwp_colonial_labour_regime
+				}
+			}
+			remove_location_modifier = nwp_agricultural_collapse
+			remove_location_modifier = nwp_colonial_labour_regime
+		}
+
 		# The lift. Settler-majority locations stop being virgin soil.
 		every_ownable_location = {
 			limit = {
