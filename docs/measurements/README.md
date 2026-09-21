@@ -145,33 +145,78 @@ justified by measurement.
 **Whether they stack additively or multiplicatively is untested**, and it
 changes the supportable floor by half a million.
 
-## The flat line
+## It was never flat, and the start was never 20M
 
-M&T starts Mesoamerica at roughly 20M in 1337. It is 19.8M in 1676.
+Measured on a fresh 1337 start:
 
-Over 339 years, across the entire Columbian exchange, the net change is
-approximately zero. Either the Great Pestilence killed almost nobody, or it
-killed some and they had fully regrown by 1676.
+| | 1337 | 1676 | change |
+|---|---|---|---|
+| Mesoamerica | **10,894.6k** | 19,802.5k | **+81.8%** |
+| fill ratio | 0.489 | 0.610 | |
 
-A flat line at the same value for three centuries is the signature of a
-population **pinned at its carrying capacity**. If that is what is happening,
-it reframes the whole design:
+Two corrections fall out, one of them to the design spec itself.
 
-- killing pops does nothing durable, because below the cap growth is positive
-  and simply refills the hole
-- the only lever that moves the equilibrium is the cap itself
+**The spec's §2 premise is wrong.** It said "1337 starting population: leave
+alone. ~20M for the region is defensible under high counts. The mod isn't wrong
+about where Mexico starts." M&T actually starts Mesoamerica at **10.9M**, not
+20M — squarely in the Cook & Simpson (10.5M) and upper-Zambardino range, a
+mid-range count rather than a Cook & Borah high one. The mod's starting point
+is *more conservative* than the spec credited it for, and the "leave it alone"
+advice is right for a better reason than the one given.
 
-That would make `local_population_capacity_modifier` the load-bearing part of
-`nwp_collapse.txt`, and mortality merely the thing that gets you there faster.
+**The flat line was an artifact of that wrong baseline.** Mesoamerica did not
+sit still for three centuries. It **grew 82%**, at 0.176%/yr compound, straight
+through the Columbian exchange. The Great Pestilence did not fail to kill
+enough — it failed to interrupt a growth trend at all.
 
-**Tested and disproved** — see above, the fill ratio is 0.610. Mortality can
-in principle win. But something is holding Mesoamerica at six-tenths of
-capacity rather than letting it grow toward the ceiling, and we do not know
-what. Food, M&T's soft-cap taper and prosperity are all candidates. Whatever it
-is, it is the equilibrium the submod has to move.
+## The real shape: the world inverted
 
-**The next measurement is a fresh 1337 start**, `event nwp.9` on day one. That
-gives the true baseline instead of the design spec's remembered ~20M, and says
-whether Mesoamerica has been flat for 339 years, declined slightly, or grew and
-fell back. It takes five minutes and it is the most informative thing left to
-measure.
+| Old World | 1337 → 1676 | | New World | 1337 → 1676 |
+|---|---|---|---|---|
+| East China | ×0.57 | | Caribbean | **×11.79** |
+| Bengal | ×0.68 | | Colombia | ×2.56 |
+| Italy | ×0.70 | | Central America | ×1.93 |
+| France | ×0.73 | | **Mesoamerica** | **×1.82** |
+| North China | ×0.73 | | Andes | ×1.29 |
+| Iberia | ×0.74 | | | |
+| Hindustan | ×0.77 | | | |
+| Japan | ×0.83 | | | |
+| Britain | ×0.99 | | | |
+
+The Old World **shrank by a quarter to a half** — the Black Death hit and never
+recovered. The New World grew. In the one era when the Americas should have been
+the only part of the world collapsing, they are the only part reliably growing.
+
+That is a cleaner statement of the bug than "the disease is too weak", and it
+suggests the fix does not need to be enormous — it needs to be *sustained and
+in the right direction*.
+
+The Caribbean at **×11.79** (149k → 1.76M) is the worst single distortion in the
+unplayed New World. Historically its indigenous population was annihilated
+within a century of contact.
+
+## The design target, stated precisely
+
+Extrapolating the observed 0.176%/yr to contact era gives Mesoamerica
+**~14.5M in 1500**. To reach the spec's target by 1600:
+
+| Target at 1600 | Required sustained rate, 1500–1600 |
+|---|---|
+| 3M | **−1.56%/yr** |
+| 2M | **−1.96%/yr** |
+| 1M | **−2.64%/yr** |
+
+And what the submod's current levers produce over that century, against the
+observed +0.176%/yr baseline:
+
+| Levers active | Result at 1600 |
+|---|---|
+| collapse modifiers only (−0.005 + −0.008) | 4.71M — not enough |
+| collapse + starvation half the time (−0.025) | **1.32M — in range** |
+| collapse + starvation continuously | 0.36M — far too much |
+
+**The target is bracketed by what is already built.** Collapse modifiers alone
+undershoot the effect; adding continuous starvation overshoots by 5x. The
+tuning problem is therefore *what fraction of locations and time starvation
+applies to* — not whether the levers are strong enough. That is a much better
+problem to have than the one this project started with.

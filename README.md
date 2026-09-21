@@ -12,7 +12,7 @@ own source, but nothing here has been run in game. Every number is a guess.
 
 | Checkpoint | Target for central Mexico |
 |---|---|
-| 1337 start | ~20M — leave alone, defensible under high counts |
+| 1337 start | **10.9M measured** — leave alone; a mid-range count, not the ~20M the design spec assumed |
 | 1600 | **1–3M** |
 | 1700 | **still under ~4M** |
 
