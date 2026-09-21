@@ -4,6 +4,54 @@ Nothing in this submod except `nwp.9` has ever executed. Do not spend a long
 campaign on it. The tests below escalate in cost, and each one is only worth
 running if the previous passed.
 
+## The next run (current step)
+
+Everything below was the bootstrapping. Both halves are now demonstrated; what
+is untested is **the two of them together at proper coverage**, and **whether
+cocoliztli ever spawns on its own**.
+
+One run answers both. Fresh 1488 save, `event nwp.7`, observer to 1565, firing
+`event nwp.9` at **1503 / 1530 / 1565**.
+
+### Benchmarks already measured
+
+| At 1503 | Mesoamerica |
+|---|---|
+| control, no submod (extrapolated) | ~12,230k |
+| disease only, 25/325 stamped | **7,482.0k** |
+| this run | ? |
+
+| At 1565 | Mesoamerica |
+|---|---|
+| control, no submod (measured, run A) | **14,343.0k** |
+| historical (Cook & Borah, 1570) | ~2,500k |
+| this run | ? |
+
+### Reading it
+
+**Coverage** — `agri_collapse` in the status line. It was 25. Anything far
+above that means the monthly sweep fixed it; still ~25 means it did not.
+
+**Trajectory at 1565** — this is the verdict:
+
+| Mesoamerica at 1565 | Verdict |
+|---|---|
+| above 8M | not enough; waves are too rare or too weak |
+| **3–6M** | **on track — fine tuning from here** |
+| 1.5–3M | matches Cook & Borah almost exactly |
+| under 1M | overshooting; weaken the collapse modifiers first |
+
+**Natural respawn** — watch the `::NWPLOG::` lines for `nwp.1 fired` in years
+well after 1488. The first wave is forced by `nwp.7`; any firing in, say, the
+1510s or 1530s is `monthly_spawn_chance` working on its own. **This is the
+thing that decides whether the submod does anything in a real playthrough**,
+where nobody fires a debug event. There was a hint of it already — two firings
+in 1499 — but nothing conclusive.
+
+If no firings appear after the first wave across 70 years, the spawn gate is
+failing and that becomes the next bug, regardless of how good the trajectory
+looks.
+
 ## Test 0 — did it load? (already done, just needs reading)
 
 You have loaded the mod and fired `nwp.9`, so the files have already been
