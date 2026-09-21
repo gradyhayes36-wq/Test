@@ -181,14 +181,14 @@ nwp_demographic_collapse = {
 			}
 			add_location_modifier = {
 				modifier = nwp_agricultural_collapse
-				years = 100
+				years = 60	# was 100
 				mode = replace
 			}
 			if = {
 				limit = { owner_from_old_world = yes }
 				add_location_modifier = {
 					modifier = nwp_colonial_labour_regime
-					years = 100
+					years = 60
 					mode = replace
 				}
 			}
@@ -237,7 +237,7 @@ nwp_demographic_collapse = {
 			}
 			add_location_modifier = {
 				modifier = nwp_colonial_labour_regime
-				years = 100
+				years = 60
 				mode = replace
 			}
 		}

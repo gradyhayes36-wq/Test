@@ -60,7 +60,7 @@ nwp.1 = {
 			# modifier measured in decades would expire well before 1700.
 			add_location_modifier = {
 				modifier = nwp_agricultural_collapse
-				years = 100
+				years = 60	# was 100
 				mode = replace
 			}
 
@@ -70,7 +70,7 @@ nwp.1 = {
 				limit = { owner_from_old_world = yes }
 				add_location_modifier = {
 					modifier = nwp_colonial_labour_regime
-					years = 100
+					years = 60
 					mode = replace
 				}
 			}
@@ -293,12 +293,12 @@ nwp.6 = {
 				add_location_modifier = { modifier = nwp_virgin_soil days = -1 }
 				add_location_modifier = {
 					modifier = nwp_agricultural_collapse
-					years = 100
+					years = 60
 					mode = replace
 				}
 				add_location_modifier = {
 					modifier = nwp_colonial_labour_regime
-					years = 100
+					years = 60
 					mode = replace
 				}
 				change_local_variable = { name = nwp_dbg add = 1 }

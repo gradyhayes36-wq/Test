@@ -41,6 +41,16 @@
 # supporting a floor of roughly 1.0M or 1.5M. Which of those applies is
 # UNTESTED and moves the supportable floor by half a million.
 #
+# DURATION: stamped for 60 years, not 100. Note the interaction with the 1600
+# cutoff on new stamps - colonial disruption re-stamps on expiry while a
+# location stays native-majority, so the effective clearing is:
+#
+#   stamped 1493 -> expires 1553 -> re-stamped -> expires 1613 -> clears
+#   stamped just before 1600 -> clears 1659
+#
+# So suppression drains across roughly 1613-1659 rather than 1693-1699 under
+# the old 100-year stamps, leaving 41-87 years of recovery runway before 1700.
+#
 # Applied for decades after a wave passes: the fields are still there, the
 # people who knew how to work them are not.
 nwp_agricultural_collapse = {
