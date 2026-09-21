@@ -195,16 +195,70 @@ The Caribbean at **×11.79** (149k → 1.76M) is the worst single distortion in 
 unplayed New World. Historically its indigenous population was annihilated
 within a century of contact.
 
+## Contact *accelerates* growth — the decisive measurement
+
+A 1488 save, two years pre-contact, splits the series at the right place:
+
+| | 1337 | 1488 | 1676 |
+|---|---|---|---|
+| Mesoamerica | 10,894.6k | 11,768.4k | 19,802.5k |
+| fill | 0.489 | 0.457 | 0.610 |
+| implied cap/location | 68.6k | 79.3k | 99.9k |
+
+| Period | Total | Annual |
+|---|---|---|
+| **Pre-contact** 1337–1488 (151 yr) | +8.0% | **+0.051%/yr** |
+| **Post-contact** 1488–1676 (188 yr) | +68.3% | **+0.277%/yr** |
+
+**Post-contact growth is 5.4x the pre-contact rate.** Pre-contact Mesoamerica
+is very nearly stable. What the mod does at contact is not "fail to kill
+people" — it is *start the population growing*, five times faster than before,
+in the exact century when it should have lost 80–90% of its people.
+
+That is the bug, stated as precisely as this project can state it. The
+Columbian exchange, in M&T 0.2.9, is a demographic boom for central Mexico.
+
+## Two mechanisms underneath it
+
+**Capacity is rising.** Implied capacity per location goes 68.6k → 79.3k →
+99.9k, up **46%** across the run, and it was already climbing before contact.
+The collapse has to fight a ceiling that is itself moving up, not a static one.
+
+**Unowned land does not simulate at all.** Several New World regions are
+identical *to the decimal* in 1337 and 1488:
+
+| | 1337 | 1488 |
+|---|---|---|
+| Caribbean | 149.102 | 149.102 |
+| Canada | 178.592 | 178.592 |
+| Brazil | 2699.704 | 2699.704 |
+| Chaco | 580.809 | 580.809 |
+| La Plata | 470.611 | 470.611 |
+| Alaska | 59.967 | 59.967 |
+| West Coast | 224.288 | 224.288 |
+| New Zealand | 42.907 | 42.907 |
+
+Frozen — not slow. Regions with real countries (Mesoamerica, Andes, Colombia,
+Aridoamerica, Great Plains, East Coast) do move over the same period. So
+colonisation *switches on* a population simulation that was previously
+inert, against a capacity sized for settled agriculture.
+
+That explains the Caribbean's ×11.79 without any appeal to disease: it sat at
+149.102k until Europeans arrived, then began simulating and grew twelvefold.
+It is a different bug from Mexico's and this submod does not address it.
+
 ## The design target, stated precisely
 
-Extrapolating the observed 0.176%/yr to contact era gives Mesoamerica
-**~14.5M in 1500**. To reach the spec's target by 1600:
+Earlier this file extrapolated ~14.5M for 1500 using the blended 0.176%/yr
+rate. That was wrong — it applied a post-contact-inflated average to a
+pre-contact period. The measured 1488 figure is **11.77M**, and the required
+rates are correspondingly gentler:
 
-| Target at 1600 | Required sustained rate, 1500–1600 |
+| Target at 1600 | Required sustained rate from 11.77M in 1488 (112 yr) |
 |---|---|
-| 3M | **−1.56%/yr** |
-| 2M | **−1.96%/yr** |
-| 1M | **−2.64%/yr** |
+| 3M | **−1.21%/yr** |
+| 2M | **−1.57%/yr** |
+| 1M | **−2.18%/yr** |
 
 And what the submod's current levers produce over that century, against the
 observed +0.176%/yr baseline:
@@ -220,3 +274,9 @@ undershoot the effect; adding continuous starvation overshoots by 5x. The
 tuning problem is therefore *what fraction of locations and time starvation
 applies to* — not whether the levers are strong enough. That is a much better
 problem to have than the one this project started with.
+
+With the corrected baseline the requirement is −1.21% to −2.18%/yr rather than
+−1.56% to −2.64%, so the bracket above is, if anything, slightly wider than it
+looked. But note what the levers must now overcome: not a static population but
+a **+0.277%/yr post-contact trend** and a capacity rising 0.12%/yr underneath
+it. The submod has to reverse an accelerating curve, not arrest a flat one.
