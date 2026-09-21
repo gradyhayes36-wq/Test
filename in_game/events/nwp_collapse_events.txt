@@ -12,6 +12,27 @@ nwp.1 = {
 	hidden = yes
 
 	immediate = {
+		set_local_variable = {
+			name = nwp_stamped
+			value = {
+				every_owned_location = {
+					limit = {
+						continent = continent:america
+						population > 1
+						dominant_culture = { is_culture_native_american = yes }
+						disease_presence = {
+							disease = disease:cocoliztli
+							value > 0.1
+						}
+						NOT = { has_location_modifier = nwp_agricultural_collapse }
+					}
+					add = 1
+				}
+			}
+		}
+		error_log = "::NWPLOG::[GetCurrentYear]:nwp.1 fired, stamping [SCOPE.GetLocalVariable('nwp_stamped').GetValue] locations"
+		remove_local_variable = nwp_stamped
+
 		every_owned_location = {
 			limit = {
 				continent = continent:america
@@ -141,6 +162,47 @@ nwp.9 = {
 		remove_local_variable = nwp_pop_total
 		remove_local_variable = nwp_fill_sum
 		remove_local_variable = nwp_loc_count
+
+		# --- Status readout -------------------------------------------------
+		# Turns a disappointing run into a diagnosis. Each counter isolates one
+		# link in the chain, so a zero says exactly which part is not working:
+		#   cocoliztli_locs = 0  -> the disease never spawned
+		#   virgin_soil = 0      -> the Situation is not sweeping
+		#   agri_collapse = 0    -> nwp.1 never fired, or its filter is too tight
+		set_local_variable = {
+			name = nwp_n_vs
+			value = { every_ownable_location = { limit = { has_location_modifier = nwp_virgin_soil } add = 1 } }
+		}
+		set_local_variable = {
+			name = nwp_n_ac
+			value = { every_ownable_location = { limit = { has_location_modifier = nwp_agricultural_collapse } add = 1 } }
+		}
+		set_local_variable = {
+			name = nwp_n_cl
+			value = { every_ownable_location = { limit = { has_location_modifier = nwp_colonial_labour_regime } add = 1 } }
+		}
+		set_local_variable = {
+			name = nwp_n_coc
+			value = {
+				every_ownable_location = {
+					limit = { disease_presence = { disease = disease:cocoliztli value > 0 } }
+					add = 1
+				}
+			}
+		}
+		error_log = "::NWPSTAT::[GetCurrentYear]:virgin_soil=[SCOPE.GetLocalVariable('nwp_n_vs').GetValue]:agri_collapse=[SCOPE.GetLocalVariable('nwp_n_ac').GetValue]:labour_regime=[SCOPE.GetLocalVariable('nwp_n_cl').GetValue]:cocoliztli_locs=[SCOPE.GetLocalVariable('nwp_n_coc').GetValue]"
+		if = {
+			limit = { is_situation_active = situation:nwp_demographic_collapse }
+			error_log = "::NWPSTAT::situation nwp_demographic_collapse ACTIVE"
+		}
+		else = {
+			error_log = "::NWPSTAT::situation nwp_demographic_collapse NOT active"
+		}
+		remove_local_variable = nwp_n_vs
+		remove_local_variable = nwp_n_ac
+		remove_local_variable = nwp_n_cl
+		remove_local_variable = nwp_n_coc
+
 		error_log = "::NWPPOP::done"
 	}
 }

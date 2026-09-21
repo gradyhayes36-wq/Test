@@ -27,7 +27,7 @@ cocoliztli = {
 					}
 				}
 			}
-			value = nwp_cocoliztli_monthly_spawn_chance
+			value = 0.004	# was nwp_cocoliztli_monthly_spawn_chance
 		}
 	}
 
@@ -65,7 +65,7 @@ cocoliztli = {
 			}
 			spawn_disease = {
 				disease = scope:disease
-				value = nwp_cocoliztli_spawn_strength
+				value = 0.75	# was nwp_cocoliztli_spawn_strength
 				save_scope_as = outbreak
 			}
 		}
@@ -123,7 +123,7 @@ cocoliztli = {
 	# through at 0.25 and collapses. We want great_pestilence's shape at
 	# roughly half its severity, because ours recurs and its does not.
 	percentage_to_meet_their_fate_on_calc = {
-		value = nwp_cocoliztli_fate_per_calc
+		value = 0.12	# was nwp_cocoliztli_fate_per_calc
 	}
 
 	# Vanilla great_pestilence 0.60 (0.85 in hard terrain), smallpox 0.15,
@@ -156,7 +156,7 @@ cocoliztli = {
 		# apocalypse, which is the right place for a disease that returns.
 		# Scaled by presence by the engine, so this is the value at full
 		# saturation, not a flat penalty.
-		local_population_growth = nwp_collapse_growth_penalty
+		local_population_growth = -0.05	# was nwp_collapse_growth_penalty
 		local_prosperity_decay = 0.3
 		local_monthly_development = -0.02
 		local_migration_attraction = -20.0
@@ -174,7 +174,7 @@ cocoliztli = {
 
 	# The 1576 wave killed survivors of 1545. Resistance must not carry over
 	# between waves the way smallpox resistance does (0.0007/month there).
-	monthly_resistance_reduction = nwp_cocoliztli_resistance_decay
+	monthly_resistance_reduction = 0.004	# was nwp_cocoliztli_resistance_decay
 
 	# Vanilla great_pestilence { 0.75 0.9 }, malaria { 0.85 0.95 },
 	# bubonic { 0.3 0.6 }, smallpox { 0.05 0.3 }.

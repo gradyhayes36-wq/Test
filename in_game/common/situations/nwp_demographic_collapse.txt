@@ -62,6 +62,7 @@ nwp_demographic_collapse = {
 	# root = situation
 	on_start = {
 		set_variable = { name = nwp_collapse_started value = yes }
+		error_log = "::NWPLOG::[GetCurrentYear]:situation nwp_demographic_collapse STARTED"
 	}
 
 	# root = situation
@@ -115,6 +116,7 @@ nwp_demographic_collapse = {
 
 	# root = situation
 	on_ended = {
+		error_log = "::NWPLOG::[GetCurrentYear]:situation nwp_demographic_collapse ENDED"
 		every_ownable_location = {
 			limit = {
 				continent = continent:america

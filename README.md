@@ -170,6 +170,12 @@ escape.
   refreshes the clock on a later wave. If it doesn't, a second wave won't
   extend the first wave's collapse.
 
+## Before playtesting
+
+See **[PLAYTEST.md](PLAYTEST.md)**. Nothing but `nwp.9` has ever executed, so
+the tests there escalate from free (read `error.log`) to a 30–60 minute
+observer A/B against control values already measured in the same saves.
+
 ## Validating
 
 See **[VALIDATION.md](VALIDATION.md)**. Short version: M&T ships a yearly census
