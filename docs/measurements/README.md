@@ -244,12 +244,52 @@ being 5x pre-contact. If the pre-contact baseline were noisy the ratio would
 mean nothing. It is not noisy.
 
 The Old World over the same era is wildly run-dependent by comparison: North
-China −24%, Sahel +64%, Bengal +19%, Iberia +11% between the two runs. So the
-pre-contact New World is not merely stable, it is **insensitive to player
-action** — which makes it an unusually clean control to measure against.
+China −24%, Sahel +64%, Bengal +19%, Iberia +11% between the two runs. So
+**pre-contact** the New World is not merely stable but insensitive to player
+action, which makes it an unusually clean control.
 
-**Caveat:** run B is a different playthrough and cannot be spliced into run A's
-series. It corroborates the baseline; it does not extend it.
+That insensitivity is strictly a pre-contact property. Run B was later carried
+to 1685 and the post-contact halves of the two runs diverge sharply — see
+below. An earlier version of this file said the New World was insensitive to
+player action without that qualifier, which was too broad.
+
+## Run B carried forward: the finding replicates, the endpoint does not
+
+| | run A | run B |
+|---|---|---|
+| pre-contact | +0.051%/yr | +0.027%/yr |
+| **epidemic era** | **+0.257%/yr (5.0x)** | **+0.181%/yr (6.6x)** |
+| colonial era | +0.291%/yr (5.7x) | +0.069%/yr (2.5x) |
+| endpoint | **19.8M at 1676** | **13.9M at 1685** |
+
+**The core finding replicates.** In both runs, contact multiplies Mesoamerican
+growth several-fold — 5.0x in one, 6.6x in the other — and in neither is there
+any notch where the epidemics should be. That is now a property of the mod,
+not of a single playthrough.
+
+**The endpoint does not replicate.** Run A reaches 19.8M; run B only 13.9M,
+42% lower, because run B's colonial-era growth collapses to +0.069%/yr against
+run A's +0.291%/yr. So the headline "19.8M in 1676" figure is one outcome
+among several, not a constant — and the earlier claim that post-contact
+America is insensitive to player action was wrong.
+
+Both still fail the target badly. The design spec wants **under ~4M at 1700**;
+the two runs deliver 13.9M and 19.8M, 3.5x and 5x over.
+
+## The tuning target survives the divergence
+
+This is the practically important result. Computing the required swing
+separately for each run, from its own measured contact-era baseline:
+
+| | From | Required for 2M at 1600 | Observed | **Swing** |
+|---|---|---|---|---|
+| run A | 11.8M at 1488 | −1.57%/yr | +0.257%/yr | **1.83 points** |
+| run B | 11.4M at 1498 | −1.69%/yr | +0.181%/yr | **1.87 points** |
+
+**1.83 and 1.87 points.** Despite a 42% gap in where the two runs end up, the
+intervention they need is the same size to within 2%. The submod can be tuned
+against ~1.85 points of sustained swing and be right for both — which is what
+makes the target usable at all.
 
 ## The frozen-wilderness finding holds across runs
 
