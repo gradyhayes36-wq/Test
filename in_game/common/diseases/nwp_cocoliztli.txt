@@ -65,7 +65,7 @@ cocoliztli = {
 			}
 			spawn_disease = {
 				disease = scope:disease
-				value = 0.75	# was nwp_cocoliztli_spawn_strength
+				value = 1	# was 0.75; natural spawns at 0.75 never established
 				save_scope_as = outbreak
 			}
 		}
