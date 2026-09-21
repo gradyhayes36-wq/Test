@@ -195,28 +195,59 @@ The Caribbean at **×11.79** (149k → 1.76M) is the worst single distortion in 
 unplayed New World. Historically its indigenous population was annihilated
 within a century of contact.
 
-## Contact *accelerates* growth — the decisive measurement
+## Contact *accelerates* growth, and the epidemics leave no mark
 
-A 1488 save, two years pre-contact, splits the series at the right place:
+Four measured points, 325 locations throughout:
 
-| | 1337 | 1488 | 1676 |
+| Year | Mesoamerica | fill | implied cap/loc |
 |---|---|---|---|
-| Mesoamerica | 10,894.6k | 11,768.4k | 19,802.5k |
-| fill | 0.489 | 0.457 | 0.610 |
-| implied cap/location | 68.6k | 79.3k | 99.9k |
+| 1337 | 10,894.6k | 0.489 | 68.6k |
+| 1488 | 11,768.4k | 0.457 | 79.3k |
+| 1565 | 14,343.0k | 0.515 | 85.6k |
+| 1676 | 19,802.5k | 0.610 | 99.9k |
 
-| Period | Total | Annual |
-|---|---|---|
-| **Pre-contact** 1337–1488 (151 yr) | +8.0% | **+0.051%/yr** |
-| **Post-contact** 1488–1676 (188 yr) | +68.3% | **+0.277%/yr** |
+| Period | Years | Total | Annual | vs pre-contact |
+|---|---|---|---|---|
+| Pre-contact 1337–1488 | 151 | +8.0% | **+0.051%/yr** | 1.0x |
+| **Contact & epidemics 1488–1565** | 77 | +21.9% | **+0.257%/yr** | **5.0x** |
+| Colonial 1565–1676 | 111 | +38.1% | +0.291%/yr | 5.7x |
 
-**Post-contact growth is 5.4x the pre-contact rate.** Pre-contact Mesoamerica
-is very nearly stable. What the mod does at contact is not "fail to kill
-people" — it is *start the population growing*, five times faster than before,
-in the exact century when it should have lost 80–90% of its people.
+The 1565 point is the one that settles it. That middle period **contains the
+entire Great Pestilence** — the Situation, the forced smallpox outbreak, the
+measles and influenza waves, the whole Columbian exchange. Mexico grows
+through it at five times its pre-contact rate.
+
+**There is no notch. There is not even a slowdown.** The epidemic era is when
+central Mexico grows fastest relative to its own history, and the rate then
+keeps climbing afterwards. Whatever the Great Pestilence is doing, it is not
+visible in the population of the region it targets.
 
 That is the bug, stated as precisely as this project can state it. The
 Columbian exchange, in M&T 0.2.9, is a demographic boom for central Mexico.
+
+## The divergence, against Cook & Borah
+
+| | Cook & Borah | Game | Game ÷ C&B |
+|---|---|---|---|
+| 1519 / 1488 | 25.2M | 11.8M | **0.47x** |
+| 1570 / 1565 | 2.5M | 14.3M | **5.74x** |
+| 1620 / 1676 | 1.2M | 19.8M | **16.50x** |
+
+The game starts *below* the high counts and ends sixteen times above them.
+It is not that M&T picked a large pre-contact population — it picked a
+conservative one and then never applied the collapse.
+
+## The Old World did decline, in the right period
+
+| Period | France | East China |
+|---|---|---|
+| 1337–1488 | **−28.5%** | **−39.9%** |
+| 1488–1565 | +2.8% | +6.6% |
+| 1565–1676 | −1.0% | −11.2% |
+
+So the engine is perfectly capable of driving a large sustained population
+collapse — the Black Death does exactly that to Eurasia in the first period.
+The machinery works. It simply is not pointed at the Americas.
 
 ## Two mechanisms underneath it
 
@@ -254,11 +285,16 @@ rate. That was wrong — it applied a post-contact-inflated average to a
 pre-contact period. The measured 1488 figure is **11.77M**, and the required
 rates are correspondingly gentler:
 
-| Target at 1600 | Required sustained rate from 11.77M in 1488 (112 yr) |
-|---|---|
-| 3M | **−1.21%/yr** |
-| 2M | **−1.57%/yr** |
-| 1M | **−2.18%/yr** |
+| Target at 1600 | Required rate from 11.77M in 1488 (112 yr) | Swing from the observed +0.257%/yr |
+|---|---|---|
+| 3M | **−1.21%/yr** | 1.47 points |
+| 2M | **−1.57%/yr** | 1.83 points |
+| 1M | **−2.18%/yr** | 2.44 points |
+
+**The submod's job, in one line: turn +0.26%/yr into −1.6%/yr across the
+1490–1600 window.** A swing of about 1.8 percentage points, sustained for a
+century. That is the number to tune against, and it is modest next to the
+levers available — `province_starving` alone is 2.5 points.
 
 And what the submod's current levers produce over that century, against the
 observed +0.176%/yr baseline:
