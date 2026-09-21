@@ -72,22 +72,29 @@ nwp_demographic_collapse = {
 		# Without this the Situation's own start condition - ANY Old World
 		# power owning ANY American location - gated the whole hemisphere. One
 		# Spanish landing on Hispaniola in 1493 stamped Patagonia, the Amazon
-		# and the Pacific Northwest in the same month, renewed them in the same
-		# month and cleared them in the same month. No regional texture, and
-		# collapse arriving centuries before the Europeans did.
+		# and the Pacific Northwest in the same month.
 		#
-		# Marked once per region and never unset: contact is not undone if the
-		# colony is later lost.
+		# MEASURED: regions cannot hold variables. Marking the region directly
+		# produced 551 script errors - "This scope doesn't support variables.
+		# Scope: Region" - and the Situation never ran at all. So the flag
+		# lives on each LOCATION in a contacted region instead, which is the
+		# same storage the virgin soil sweep already uses successfully.
+		#
+		# Never unset: contact is not undone if the colony is later lost.
 		every_region = {
 			limit = {
-				NOT = { has_variable = nwp_region_contacted }
 				any_ownable_location_in_region = {
 					continent = continent:america
 					owner_from_old_world = yes
 				}
 			}
-			set_variable = nwp_region_contacted
-			error_log = "::NWPLOG::region reached by Europe"
+			every_ownable_location_in_region = {
+				limit = {
+					continent = continent:america
+					NOT = { has_variable = nwp_contacted }
+				}
+				set_variable = nwp_contacted
+			}
 		}
 
 		# Virgin soil is a property of the PEOPLE, not the ground. A location
@@ -195,7 +202,7 @@ nwp_demographic_collapse = {
 				current_date < 1600.1.1
 				continent = continent:america
 				population > 1
-				region = { has_variable = nwp_region_contacted }
+				has_variable = nwp_contacted
 				dominant_culture = { is_culture_native_american = yes }
 				disease_presence = {
 					disease = disease:cocoliztli
@@ -256,7 +263,7 @@ nwp_demographic_collapse = {
 				current_date < 1600.1.1
 				continent = continent:america
 				population > 1
-				region = { has_variable = nwp_region_contacted }
+				has_variable = nwp_contacted
 				dominant_culture = { is_culture_native_american = yes }
 				NOT = { has_location_modifier = nwp_colonial_labour_regime }
 			}
