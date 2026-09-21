@@ -116,14 +116,43 @@ is the fallback.
 
 ## Test 3 — fresh observer run (hours, not tens of hours)
 
-1337 start, observer, max speed, `nwp.9` at 1488 / 1565 / 1600. Compare
-against run A's control series. Only worth it if Test 2 is blocked.
+EU5 has one start date, so this is 1337, observer, max speed, `nwp.9` at
+1488 / 1565 / 1600. Only worth it if Test 2 is blocked.
+
+**Compare rates, not absolute populations.** This is the trap. Run A and run B
+diverged **42%** in where Mesoamerica ended up (19.8M vs 13.9M), so a fresh
+run landing at, say, 16M proves nothing on its own — that is inside ordinary
+run-to-run variance. What *did* replicate across the two control runs:
+
+| Quantity | run A | run B | replicates? |
+|---|---|---|---|
+| pre-contact rate | +0.051%/yr | +0.027%/yr | yes, both ~static |
+| epidemic-era rate | +0.257%/yr | +0.181%/yr | yes, both strongly positive |
+| epidemic ÷ pre-contact | 5.0x | 6.6x | yes, both large |
+| **endpoint population** | **19.8M** | **13.9M** | **no — 42% apart** |
+
+So the success criterion is about the **epidemic-era growth rate**, measured
+inside the same run:
+
+1. Fire `nwp.9` at 1488 to get that run's own pre-contact baseline.
+2. Fire it again at 1565.
+3. Compute the rate between them.
+
+| Epidemic-era rate | Verdict |
+|---|---|
+| still ~+0.2%/yr | the submod did nothing — go to the debug harness |
+| near zero | the chain works, tuning is short of target |
+| **−1.2% to −1.7%/yr** | **on target** (1–3M by 1600) |
+| below −2.5%/yr | overshooting; ease the starvation coverage |
+
+Using the run's own 1488 figure as the baseline removes the run-variance
+problem entirely, because both numbers come from the same playthrough.
 
 ## What success looks like
 
-Not "Mesoamerica is 2M". At this stage success is **any measurable divergence
-from the control in the right direction**. The control at 1565 is 14,343.0k;
-anything meaningfully below that means the chain works end to end and the job
+Not "Mesoamerica is 2M". At this stage success is **the epidemic-era growth
+rate turning negative at all**. Both control runs put it at +0.18% to +0.26%;
+anything meaningfully below zero means the chain works end to end and the job
 becomes tuning. The target is ~1.85 points of sustained swing
 (see `docs/measurements/`), and the levers bracket it.
 
