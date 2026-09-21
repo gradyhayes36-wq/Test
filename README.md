@@ -197,6 +197,12 @@ that reaches **1.91M at 1600** against a 1–3M target. The open question is
 whether repeated waves overshoot, which resistance decay and coverage
 saturation may or may not restrain.
 
+## Running it
+
+See **[RUN-PROTOCOL.md](RUN-PROTOCOL.md)** for the current run: fresh 1488,
+natural spawn, checkpoints at 1500 / 1550 / 1565 / 1600 / 1650 / 1700, with
+abort conditions.
+
 ## Before playtesting
 
 See **[PLAYTEST.md](PLAYTEST.md)**. Nothing but `nwp.9` has ever executed, so
