@@ -24,7 +24,6 @@ nwp.1 = {
 							disease = disease:cocoliztli
 							value > 0.1
 						}
-						NOT = { has_location_modifier = nwp_agricultural_collapse }
 					}
 					add = 1
 				}
@@ -46,7 +45,13 @@ nwp.1 = {
 					disease = disease:cocoliztli
 					value > 0.1
 				}
-				NOT = { has_location_modifier = nwp_agricultural_collapse }
+				# NO has_location_modifier filter here. It used to skip any
+				# location already carrying the modifier, which made
+				# `mode = replace` unreachable and meant a second cocoliztli
+				# wave could never restart the 100-year clock - the exact
+				# thing a recurring disease exists to do. Observed 1495:
+				# "nwp.1 fired, stamping 0 locations", because the debug
+				# stamp had already covered all 325.
 			}
 
 			# The maintainers are dead and the fields go with them. Long

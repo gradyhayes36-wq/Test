@@ -52,15 +52,72 @@ Fixed by adopting smallpox's exact spread profile, which demonstrably spreads
 across the Americas in this mod, while keeping the lethality and resistance
 numbers that are the actual point of cocoliztli.
 
+## Carried to 1501: the rate is on target, not 3x over
+
+| Year | Mesoamerica | fill | implied cap/loc |
+|---|---|---|---|
+| 1488 | 11,768.4k | 0.457 | 79.3k |
+| 1494 | 8,795.2k | 0.547 | 49.4k |
+| 1501 | 7,960.6k | 0.494 | **49.6k** |
+
+| Period | Rate |
+|---|---|
+| 1488–1494 | **−4.74%/yr** |
+| 1494–1501 | **−1.41%/yr** |
+
+**Capacity has stopped falling** — 49.4k then 49.6k. So the −4.74%/yr was a
+one-off adjustment as the population dropped toward a suddenly lower ceiling,
+not the ongoing rate. The earlier "three times too strong" reading was the
+transient, and is withdrawn.
+
+**The steady-state rate is −1.41%/yr**, against a target band of −1.21%/yr
+(for 3M at 1600) to −1.57%/yr (for 2M). It sits inside the band.
+
+Projecting from 7,960.6k at 1501:
+
+| | Projected | Design target |
+|---|---|---|
+| 1550 | 3.96M | — |
+| **1600** | **1.94M** | **1–3M** ✓ |
+| 1700 | 0.47M | under ~4M (but this is too low) |
+
+1600 lands almost exactly on target. **1700 is the problem** — 0.47M against a
+historical ~1.5–2M. But that projection holds the modifiers at full strength
+forever, which production does not: they carry `years = 100`, so a stamp in
+1500 expires around 1600 unless a later wave refreshes it. The taper is built
+in; this projection just does not model it.
+
+## Virgin soil alone does nothing to population
+
+Every American region carries `nwp_virgin_soil`. Only Mesoamerica carries the
+two collapse modifiers. Over the same 1494–1501 window:
+
+| Region | Rate |
+|---|---|
+| **Mesoamerica** (collapse modifiers) | **−1.41%/yr** |
+| Central America | +0.08%/yr |
+| Andes | −0.00%/yr |
+| Colombia | +0.04%/yr |
+| Aridoamerica | +0.08%/yr |
+| Brazil | +0.08%/yr |
+| Caribbean | +1.59%/yr |
+| East Coast | −1.79%/yr |
+
+Virgin soil is **demographically neutral on its own** — it lowers disease
+resistance and life expectancy, but with no disease circulating it changes
+nothing. All the movement comes from the two collapse modifiers.
+
+That makes cocoliztli load-bearing rather than optional. The Situation
+establishes susceptibility; the disease delivers coverage; the modifiers do the
+demographic work. Break the middle link and nothing happens — which is exactly
+what the extinct disease produced everywhere outside the debug-stamped region.
+
+East Coast at −1.79%/yr is an outlier with no collapse modifiers on it, worth
+a look later.
+
 ## The calibration this gives us
 
-At **full coverage**, the collapse modifiers produce −4.74%/yr against a target
-of −1.57%/yr. **Three times stronger than needed.**
-
-That is a good problem. The production design applies these modifiers only to
-wave-struck locations, so real coverage will be a fraction of 325 — and the
-tuning question becomes what that fraction turns out to be once cocoliztli
-actually spreads, rather than whether the levers can move the number.
-
-Half A is solved and then some. Half B has never yet been observed to do
-anything, because it died before it could.
+The modifiers are **correctly sized for full coverage**, not oversized. That
+inverts the tuning problem: cocoliztli does not need to be restrained, it needs
+to spread widely enough and recur often enough to keep most of Mesoamerica
+stamped. Coverage is the target, not a thing to limit.

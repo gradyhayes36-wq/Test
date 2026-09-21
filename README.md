@@ -173,9 +173,11 @@ escape.
 ## Status: first live test passed, one bug found
 
 `docs/measurements/first-live-test-1494.md`. The Situation starts on contact,
-`dominant_culture` works, the collapse modifiers cut Mesoamerica **−25.3% in
-six years** (−4.74%/yr, three times the target) and capacity **−37.6%**, with
-essentially all the loss being deaths rather than migration.
+`dominant_culture` works, and the collapse modifiers settle to a steady-state
+**−1.41%/yr** — inside the −1.21% to −1.57% target band, projecting to
+**1.94M at 1600** against a 1–3M target. Capacity falls 37.6% and stabilises.
+Essentially all the loss is deaths rather than migration. Virgin soil alone is
+demographically neutral, which makes cocoliztli load-bearing.
 
 Cocoliztli went extinct without spreading — its r0, spread threshold and calc
 interval had all been set below M&T's smallpox. Fixed by adopting smallpox's

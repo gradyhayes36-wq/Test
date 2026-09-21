@@ -100,6 +100,40 @@ nwp_demographic_collapse = {
 			remove_location_modifier = nwp_virgin_soil
 		}
 
+		# Compact monthly tracker. nwp.9 is a country_event and cannot be
+		# fired from the console in observer mode - "not a valid country to
+		# trigger for. Country: ---" - which is exactly the mode long runs
+		# use. This runs from the Situation instead, needs no country, and is
+		# one line a month rather than the census's ~85.
+		region:mesoamerica_region = {
+			set_local_variable = {
+				name = nwp_trk_pop
+				value = { every_ownable_location_in_region = { add = population } }
+			}
+			set_local_variable = {
+				name = nwp_trk_coc
+				value = {
+					every_ownable_location_in_region = {
+						limit = { disease_presence = { disease = disease:cocoliztli value > 0 } }
+						add = 1
+					}
+				}
+			}
+			set_local_variable = {
+				name = nwp_trk_ac
+				value = {
+					every_ownable_location_in_region = {
+						limit = { has_location_modifier = nwp_agricultural_collapse }
+						add = 1
+					}
+				}
+			}
+			error_log = "::NWPTRACK::[GetCurrentYear]:meso_pop=[SCOPE.GetLocalVariable('nwp_trk_pop').GetValue]:cocoliztli_locs=[SCOPE.GetLocalVariable('nwp_trk_coc').GetValue]:agri_collapse=[SCOPE.GetLocalVariable('nwp_trk_ac').GetValue]"
+			remove_local_variable = nwp_trk_pop
+			remove_local_variable = nwp_trk_coc
+			remove_local_variable = nwp_trk_ac
+		}
+
 		# Keep the Situation visible to countries that lived through it, the
 		# way M&T's great_pestilence uses had_great_pestilence.
 		every_country = {
