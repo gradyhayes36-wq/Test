@@ -34,6 +34,7 @@ nwp.1 = {
 
 		every_owned_location = {
 			limit = {
+				current_date < 1600.1.1	# see the situation file
 				continent = continent:america
 				population > 1
 				# Settler colonies are not what collapsed. The agricultural

@@ -141,6 +141,12 @@ nwp_demographic_collapse = {
 		# is actually present in it.
 		every_ownable_location = {
 			limit = {
+				# Collapse machinery runs to 1600 and then stops ISSUING.
+				# Without this the guard below passes again the moment a
+				# 100-year stamp expires, the sweep re-stamps, and the
+				# collapse never bottoms out - modelled decline to ~2.8M by
+				# 1730 with no recovery possible.
+				current_date < 1600.1.1
 				continent = continent:america
 				population > 1
 				dominant_culture = { is_culture_native_american = yes }
@@ -199,6 +205,8 @@ nwp_demographic_collapse = {
 		# collapse slightly too broad is a better failure than none at all.
 		every_ownable_location = {
 			limit = {
+				# Same cutoff as agricultural collapse - see above.
+				current_date < 1600.1.1
 				continent = continent:america
 				population > 1
 				dominant_culture = { is_culture_native_american = yes }
