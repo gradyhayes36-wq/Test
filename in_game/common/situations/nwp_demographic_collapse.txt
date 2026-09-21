@@ -175,21 +175,32 @@ nwp_demographic_collapse = {
 			}
 		}
 
-		# Colonial labour regime, decoupled from the disease.
+		# Colonial disruption, decoupled from BOTH the disease and per-location
+		# ownership.
 		#
-		# MEASURED 1533: labour_regime=0 across the whole hemisphere, because
-		# this modifier was nested inside the disease-presence block and
-		# cocoliztli never happened to reach a colonised location. Post-wave
-		# Mesoamerica then ran at -0.159%/yr against the -1.41%/yr measured
-		# when all three modifiers were active.
+		# MEASURED 1533: labour_regime=0 across the whole hemisphere. First
+		# because the modifier was nested inside the disease-presence block and
+		# cocoliztli never reached a colonised location; then, once that was
+		# fixed, because it still required THIS location to have an Old World
+		# owner - and if nobody ever conquers central Mexico, central Mexico
+		# never qualifies however much of the Caribbean Europe holds.
 		#
-		# Encomienda and repartimiento are consequences of colonial RULE, not
-		# of an active epidemic. Gate them on ownership, as history does.
+		# That made the whole collapse hostage to one AI's conquest decisions.
+		# A Spain wiped out in Europe before 1500, or simply uninterested in
+		# Mexico, produced no collapse at all.
+		#
+		# So the gate is now the Situation itself. The Situation only starts
+		# when some Old World power owns some American location, and from that
+		# point this applies to every native-majority location in the
+		# hemisphere. Historically defensible: the disruption ran far ahead of
+		# the conquerors - slave raiding, refugee movement, collapsed trade and
+		# tribute networks reached deep into territory no European had seen.
+		# It is also deliberately the sensitive direction to err in, because a
+		# collapse slightly too broad is a better failure than none at all.
 		every_ownable_location = {
 			limit = {
 				continent = continent:america
 				population > 1
-				owner_from_old_world = yes
 				dominant_culture = { is_culture_native_american = yes }
 				NOT = { has_location_modifier = nwp_colonial_labour_regime }
 			}
