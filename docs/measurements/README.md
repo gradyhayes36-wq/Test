@@ -225,6 +225,51 @@ visible in the population of the region it targets.
 That is the bug, stated as precisely as this project can state it. The
 Columbian exchange, in M&T 0.2.9, is a demographic boom for central Mexico.
 
+## Replicated in a second playthrough
+
+A separate Portugal run, 1498, with no contact in Central America:
+
+| | Mesoamerica | fill |
+|---|---|---|
+| run A, 1488 | 11,768.4k | 0.457 |
+| **run B (Portugal), 1498** | **11,382.5k** | **0.460** |
+
+Ten years apart, different playthroughs, different everything: **3.3% apart on
+population and 0.7% on fill ratio.** Pre-contact Mesoamerica tracks the same
+near-flat line regardless of run — +0.051%/yr in run A, +0.027%/yr in run B,
+both effectively static.
+
+That matters because the headline finding is a *ratio* — post-contact growth
+being 5x pre-contact. If the pre-contact baseline were noisy the ratio would
+mean nothing. It is not noisy.
+
+The Old World over the same era is wildly run-dependent by comparison: North
+China −24%, Sahel +64%, Bengal +19%, Iberia +11% between the two runs. So the
+pre-contact New World is not merely stable, it is **insensitive to player
+action** — which makes it an unusually clean control to measure against.
+
+**Caveat:** run B is a different playthrough and cannot be spliced into run A's
+series. It corroborates the baseline; it does not extend it.
+
+## The frozen-wilderness finding holds across runs
+
+Exact to the decimal in run A 1337, run A 1488 **and** run B 1498:
+
+| | |
+|---|---|
+| Canada | 178.592 |
+| Caribbean | 149.102 |
+| Alaska | 59.967 |
+| West Coast | 224.288 |
+
+Three saves, two playthroughs, 161 years — identical. Meanwhile regions Portugal
+*did* reach moved: Brazil −5.1%, New Zealand −11.8%. So the earlier reading
+holds, with one refinement: it is specifically **uncolonised** land that is
+inert, and touching it starts the simulation.
+
+(Brazil going *down* 5.1% once Portugal arrives is worth a look on its own —
+it is the only New World region measured that declines after contact.)
+
 ## The divergence, against Cook & Borah
 
 | | Cook & Borah | Game | Game ÷ C&B |
