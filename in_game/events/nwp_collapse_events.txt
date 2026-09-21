@@ -37,6 +37,7 @@ nwp.1 = {
 				current_date < 1600.1.1	# see the situation file
 				continent = continent:america
 				population > 1
+				region = { has_variable = nwp_region_contacted }
 				# Settler colonies are not what collapsed. The agricultural
 				# landscape that stopped being maintained was the one the
 				# natives built and worked, so this follows the population
