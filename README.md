@@ -183,20 +183,19 @@ Cocoliztli went extinct without spreading — its r0, spread threshold and calc
 interval had all been set below M&T's smallpox. Fixed by adopting smallpox's
 proven spread profile and keeping only the lethality and resistance changes.
 
-## Status: both halves demonstrated
+## Status: full chain verified
 
-`docs/measurements/production-test-1503.md`. With the spread fix, cocoliztli
-established and spread — 37 country-spreads in its first year — taking
-Mesoamerica from 11,768.4k to **7,482.0k by 1503, −36.4% in fifteen years and
-39% below the control trend**. That was the disease's own mortality: only 25 of
-325 locations were stamped and capacity did not move.
+`docs/measurements/coverage-fix-1497.md`. With the Situation active and
+cocoliztli seeded at 1496, the disease reached **243 of 325** Mesoamerican
+locations and the monthly sweep stamped **335** (against 25 before the coverage
+fix). Mesoamerica fell **12,019.6k → 8,254.4k, −31.3% in ten months** — the
+magnitude of the historical 1520 smallpox wave. Capacity is now falling too
+(79.3k → 73.0k).
 
-Combined with the earlier debug run, where the modifiers alone held a
-steady −1.41%/yr, both halves are now independently shown to work.
-
-The flaw found was **coverage** — `nwp.1` only saw locations infected at the
-instant a country was reached. Stamping moved into the Situation's monthly
-sweep.
+Projected forward with the measured −1.41%/yr suppression and no further waves,
+that reaches **1.91M at 1600** against a 1–3M target. The open question is
+whether repeated waves overshoot, which resistance decay and coverage
+saturation may or may not restrain.
 
 ## Before playtesting
 
