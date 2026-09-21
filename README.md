@@ -170,6 +170,17 @@ escape.
   refreshes the clock on a later wave. If it doesn't, a second wave won't
   extend the first wave's collapse.
 
+## Status: first live test passed, one bug found
+
+`docs/measurements/first-live-test-1494.md`. The Situation starts on contact,
+`dominant_culture` works, the collapse modifiers cut Mesoamerica **−25.3% in
+six years** (−4.74%/yr, three times the target) and capacity **−37.6%**, with
+essentially all the loss being deaths rather than migration.
+
+Cocoliztli went extinct without spreading — its r0, spread threshold and calc
+interval had all been set below M&T's smallpox. Fixed by adopting smallpox's
+proven spread profile and keeping only the lethality and resistance changes.
+
 ## Before playtesting
 
 See **[PLAYTEST.md](PLAYTEST.md)**. Nothing but `nwp.9` has ever executed, so

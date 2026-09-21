@@ -71,23 +71,32 @@ cocoliztli = {
 		}
 	}
 
-	# Enteric fever: spread by contaminated water and crowding rather than
-	# breath, so denser settlement matters more than contact frequency.
+	# MEASURED 1494: with r0 { 2 4 } rural and a 0.40 spread threshold,
+	# cocoliztli seeded at full presence in one location went extinct within
+	# six years without ever seeding a neighbour. All three spread parameters
+	# had been set below M&T's smallpox - lower r0, higher threshold, slower
+	# calc interval - on the epidemiological reasoning that enteric fever is
+	# less contagious than smallpox. True, and it made the disease unable to
+	# establish at all.
+	#
+	# Now uses smallpox's exact spread profile, which demonstrably spreads
+	# across the Americas in this mod. The lethality and resistance numbers,
+	# which are the actual point of cocoliztli, are unchanged.
 	r0 = {
 		if = {
 			limit = {
 				location_rank ?= location_rank:rural_settlement
 			}
-			value = { 2 4 }
+			value = { 3 6 }
 		}
 		else_if = {
 			limit = {
 				location_rank ?= location_rank:town
 			}
-			value = { 4 8 }
+			value = { 5 10 }
 		}
 		else = {
-			value = { 8 12 }
+			value = { 10 15 }
 		}
 
 		# Congregacion concentrated survivors into new settlements with
@@ -99,7 +108,7 @@ cocoliztli = {
 		}
 	}
 
-	calc_interval_days = { 6 14 }
+	calc_interval_days = { 4 12 }	# smallpox's value; was { 6 14 }
 
 	location_stagnation_chance = {
 		if = {
@@ -126,23 +135,11 @@ cocoliztli = {
 		value = 0.12	# was nwp_cocoliztli_fate_per_calc
 	}
 
-	# Vanilla great_pestilence 0.60 (0.85 in hard terrain), smallpox 0.15,
-	# bubonic 0.30. High thresholds keep the disease concentrated and lethal
-	# rather than smeared thinly across the map.
+	# Was 0.40 / 0.55. Smallpox uses a flat 0.15 and spreads through the
+	# Americas; vanilla great_pestilence's 0.60 works only because that disease
+	# is force-seeded by its Situation rather than having to establish itself.
 	location_spread_threshold = {
-		if = {
-			limit = {
-				num_roads = 0
-				OR = {
-					topography = mountains
-					vegetation = jungle
-				}
-			}
-			value = 0.55
-		}
-		else = {
-			value = 0.40
-		}
+		value = 0.15
 	}
 
 	# Half A, the suppression half, in its cheapest form: while a wave is
