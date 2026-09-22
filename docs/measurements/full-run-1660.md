@@ -1,7 +1,18 @@
 ﻿# Full run, 1488 -> 1660: the design target is met
 
 Setup: fresh 1488 start, no forced seed. Spain given one Caribbean colony, then
-one conquered Mesoamerican location in the early 1500s. Natural spawning live.
+one conquered Mesoamerican location in the early 1500s.
+
+**This run is a hybrid, not a single build.** 1488-1565 ran on the pre-`5caacee`
+build: spawn gated on `owner_from_old_world` (so no disease at all) and
+`labour_regime` population growth at -0.012. From 1565 it continues on
+`5caacee`, which moved the spawn gate to `has_variable = nwp_contacted` and
+eased `labour_regime` to -0.009. Every spawn below is a consequence of that
+change - the previous build produced zero in 77 years.
+
+So the 1600 figure is: a century of collapse driven by labour regime at -0.012
+with no disease, followed by 35 years of a weaker labour regime with the disease
+live. A clean single-build run from 1488 has not been done yet.
 
 ## Headline
 
@@ -21,7 +32,8 @@ Against the +0.257%/yr control trend, the counterfactual 1660 figure is
 
 ## Cocoliztli works, 100 years late
 
-Nine natural spawns, first at 1569:
+The contact-gated spawn fix works. Nine natural spawns, the first at 1569 -
+four years after the build changed, against zero in the 77 years before it:
 
 | Year | Seed pop |
 |---|---|
