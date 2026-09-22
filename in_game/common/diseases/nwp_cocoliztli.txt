@@ -32,31 +32,43 @@ cocoliztli = {
 	}
 
 	spawn = {
+		# DIAGNOSTIC. The error_log below sits inside random_ownable_location,
+		# so it only prints when an eligible location EXISTS. 77 years of the
+		# 1488 natural-spawn run produced zero ::NWPSPAWN:: lines, which could
+		# mean the roll never came up (2.5% likely at 0.004/month) or that it
+		# came up repeatedly and found nothing to spawn into. These two lines
+		# separate those cases: ::NWPROLL:: prints on every successful roll and
+		# carries the count of locations that pass the limit ignoring climate.
+		set_local_variable = {
+			name = nwp_elig
+			value = {
+				every_ownable_location = {
+					limit = {
+						population > 10
+						continent = continent:america
+						OR = {
+							owner_from_old_world = yes
+							has_variable = had_great_pestilence_in_location
+							location_has_pestilence_trigger = yes
+						}
+						any_pop = { culture = { is_culture_native_american = yes } }
+					}
+					add = 1
+				}
+			}
+		}
+		error_log = "::NWPROLL::[GetCurrentYear]:spawn roll succeeded:eligible_ignoring_climate=[SCOPE.GetLocalVariable('nwp_elig').GetValue]"
+		remove_local_variable = nwp_elig
+
 		random_ownable_location = {
 			limit = {
-				# MEASURED: density decides whether cocoliztli establishes at
-				# all. Seeded at value = 1 into a 2.4k-pop Caribbean location it
-				# reached 1 location and died in three years; seeded at the same
-				# strength into Mesoamerica (~36k per location) it reached 243 of
-				# 325 and took 31% of the region in ten months. A 15x density
-				# difference produced a 243x difference in spread.
+				# NOTE: an earlier comment here claimed density decided whether
+				# cocoliztli could establish. It does not - a 2.39k Caribbean seed
+				# later produced a 42-location wave. See docs/measurements/README.md.
+				# The gate is kept as a design choice (cocoliztli belongs in dense
+				# agrarian cores, not on the frontier), not as an establishment fix.
 				#
-				# Every natural spawn had been landing in thin colonial outposts,
-				# because eligibility requires European contact and early
-				# contact means the Caribbean (~1.4k per location) and the East
-				# Coast (~2.8k).
-				#
-				# 10k is above every colonial frontier average and below the
-				# dense agrarian cores - Colombia 14.5k, Andes 22k, Mesoamerica
-				# 36.2k. Historically exact: cocoliztli was a disease of the
-				# Mesoamerican population core, not of Caribbean plantations.
-				# UNITS, settled by measurement: the seed log printed
-				# `pop=2.39217` for a Caribbean location, against a regional
-				# census of 152.39117 over 111 locations. `population` is in
-				# THOUSANDS. So `> 10` is ten thousand pops, which is what was
-				# intended all along - and the `> 10000` briefly pushed here
-				# meant ten million in one location, which no location has.
-				# That gate killed natural spawning outright.
+				# UNITS: `population` is in THOUSANDS, so this is ten thousand pops.
 				population > 10
 				continent = continent:america
 
