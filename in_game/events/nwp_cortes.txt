@@ -45,6 +45,10 @@
 #
 # Kept for testing: nwp.27 forces the expedition from the console without
 # waiting for 1510.
+#
+# OPEN: the grant does not create a colonial subject - the sponsor simply
+# owns six Mesoamerican locations. nwp.30 probes thirteen candidate
+# colonization effects across both plausible scopes.
 # =====================================================================
 
 
@@ -87,6 +91,54 @@ nwp.30 = {
 				start_colonization = root
 				finish_colonization = root
 				set_colonial_owner = root
+			}
+		}
+	}
+}
+
+
+# --------------------------------------------------------------------
+# nwp.30 - DEBUG. Is there a scripted effect that colonizes a location?
+#
+# The grant transfers ownership but does not create a colonial subject, so
+# the sponsor holds six locations in Mesoamerica with no colonial nation
+# attached. `colonize_and_finish xamapan` does it from the console, but
+# console commands and script effects are different namespaces in this
+# engine, so the command existing does not mean an effect of that name does.
+#
+# Never fired. Load-time validation names the fakes; whichever draws no
+# complaint is real. Two branches because the scope is unknown - some of
+# these would sit on the country, some on the location.
+# --------------------------------------------------------------------
+nwp.30 = {
+	type = country_event
+	title = hidden_event.t
+	hidden = yes
+	orphan = yes
+
+	immediate = {
+		# Country scope
+		if = {
+			limit = { always = no }
+			colonize_and_finish = location:xamapan
+			colonize = location:xamapan
+			create_colony = location:xamapan
+			create_colonial_nation = location:xamapan
+			form_colonial_nation = location:xamapan
+			create_subject = location:xamapan
+			colonize_location = location:xamapan
+		}
+
+		# Location scope
+		if = {
+			limit = { always = no }
+			location:xamapan ?= {
+				colonize_and_finish = root
+				colonize = root
+				finish_colonization = yes
+				start_colonization = root
+				set_colony = root
+				create_colony = root
 			}
 		}
 	}
