@@ -49,24 +49,6 @@
 # evidently NOT a location, and `province:` is not an addressable scope, so
 # it is probably a bare database key or the numeric id - the debug panel
 # showed cuetlaxtlan_province (3544).
-# --------------------------------------------------------------------
-nwp.30 = {
-	type = country_event
-	title = hidden_event.t
-	hidden = yes
-	orphan = yes
-
-	immediate = {
-		if = {
-			limit = { always = no }
-			create_colonial_charter = { target = cuetlaxtlan_province }
-			create_colonial_charter = { target = 3544 }
-			create_colonial_charter = { target = province_definition:cuetlaxtlan_province }
-			create_colonial_charter = { target = province:cuetlaxtlan_province }
-			create_colonial_charter = { target = province_definition:3544 }
-		}
-	}
-}
 
 
 # --------------------------------------------------------------------
@@ -106,7 +88,18 @@ nwp.27 = {
 		location:teutila ?= { change_location_owner = scope:cortes_sponsor }
 		location:puctlan ?= { change_location_owner = scope:cortes_sponsor }
 		location:otatitlan ?= { change_location_owner = scope:cortes_sponsor }
-		error_log = "::NWPCORTES::[GetCurrentYear]:DEBUG province grant executed"
+
+		# And the charter, which is what actually makes it a colony. Without
+		# it the sponsor holds six overseas provinces it cannot administer or
+		# expand from, which defeats the point of the beachhead.
+		#
+		# MEASURED, by elimination: `target` is the only real parameter, it is
+		# country scope only, and it wants a province_definition - not a
+		# location (scope type location), not a province (scope type
+		# province), not a numeric id (Invalid province_definition key: 3544),
+		# and not a bare key (treated as an event target link and not found).
+		create_colonial_charter = { target = province_definition:cuetlaxtlan_province }
+		error_log = "::NWPCORTES::[GetCurrentYear]:DEBUG province grant + charter executed"
 	}
 }
 
@@ -140,7 +133,6 @@ nwp.20 = {
 	type = country_event
 	title = nwp.20.t
 	desc = nwp.20.d
-	orphan = yes
 
 	# MEASURED: EAudioEventOutcome accepts positive, negative and neutral.
 	# good, bad, none and default were all rejected. This is an event-level
@@ -182,7 +174,18 @@ nwp.20 = {
 		location:teutila ?= { change_location_owner = root }
 		location:puctlan ?= { change_location_owner = root }
 		location:otatitlan ?= { change_location_owner = root }
-		error_log = "::NWPCORTES::[GetCurrentYear]:expedition accepted, Cuetlaxtlan province granted"
+
+		# And the charter, which is what actually makes it a colony. Without
+		# it the sponsor holds six overseas provinces it cannot administer or
+		# expand from, which defeats the point of the beachhead.
+		#
+		# MEASURED, by elimination: `target` is the only real parameter, it is
+		# country scope only, and it wants a province_definition - not a
+		# location (scope type location), not a province (scope type
+		# province), not a numeric id (Invalid province_definition key: 3544),
+		# and not a bare key (treated as an event target link and not found).
+		create_colonial_charter = { target = province_definition:cuetlaxtlan_province }
+		error_log = "::NWPCORTES::[GetCurrentYear]:expedition accepted, Cuetlaxtlan province granted and chartered"
 	}
 
 	option = {
