@@ -120,10 +120,63 @@ nwp.22 = {
 
 
 # --------------------------------------------------------------------
-# nwp.20 - the real thing. NOT HOOKED UP YET.
+# nwp.20 - the Cortes expedition. VISIBLE, with a choice.
 #
-# Once a probe confirms the grant, the working branch goes here and this gets
-# called from the Situation's on_monthly behind a global-variable guard:
+# NOT HOOKED UP YET - the probes above must confirm the grant first. It is
+# orphan = yes so it can be fired from the console to check the popup renders
+# and the localization resolves, without waiting on the trigger.
+#
+# Two options, affirmative listed first so it is the player's default. The AI
+# takes it at 95:5, so an observer run or an AI Castile follows history
+# essentially always while a human player keeps the veto.
+#
+# Declining sets the same done flag, so it asks once and then leaves you
+# alone. Be aware that declining means nothing gives Mesoamerica a European
+# foothold - which is precisely the untouched-Mexico outcome the 12-hour
+# observer run produced, so the submod will have little to do there.
+#
+# If you would rather it keep asking every generation instead of once, drop
+# the set_global_variable from the decline option and add a date check to the
+# hook's limit.
+#
+# ADDITIONAL UNVERIFIED TOKENS: ai_chance, and the two scope branches below.
+# Both grants are wrapped in ?= so whichever key form is wrong no-ops rather
+# than firing. That handles a bad KEY. If `province:` or `location:` is not a
+# valid scope TYPE at all it will be a load-time parse error instead, which
+# shows up in error.log the moment the mod loads - check there first.
+# --------------------------------------------------------------------
+nwp.20 = {
+	type = country_event
+	title = nwp.20.t
+	desc = nwp.20.d
+	orphan = yes
+
+	option = {
+		name = nwp.20.a
+		ai_chance = { factor = 95 }
+
+		province:cuetlaxtlan_province ?= {
+			every_location_in_province = {
+				set_owner = root
+			}
+		}
+		location:cuetlaxtlan_province ?= {
+			set_owner = root
+		}
+		error_log = "::NWPCORTES::[GetCurrentYear]:expedition accepted, Veracruz granted"
+	}
+
+	option = {
+		name = nwp.20.b
+		ai_chance = { factor = 5 }
+
+		error_log = "::NWPCORTES::[GetCurrentYear]:expedition declined"
+	}
+}
+
+
+# --------------------------------------------------------------------
+# The hook, for the Situation's on_monthly once the probes pass:
 #
 #	if = {
 #		limit = {
@@ -136,11 +189,16 @@ nwp.22 = {
 #			}
 #		}
 #		set_global_variable = nwp_cortes_done
-#		location:sevilla.owner = { trigger_event_silently = nwp.20 }
+#		location:sevilla.owner = { trigger_event = { id = nwp.20 } }
 #	}
 #
+# trigger_event, NOT trigger_event_silently - the silent form is what nwp.1
+# uses and it would suppress the popup, handing the player's choice to the
+# engine without asking.
+#
 # The date gate keeps it near 1519 rather than firing the moment Columbus
-# lands. The global variable makes it once per game. Note the sponsor is
-# re-resolved AT FIRING TIME, so a conquest of Andalusia in 1515 redirects the
-# expedition; one in 1530 does not, which is the right way round.
+# lands. The global variable is set BEFORE firing, so it cannot re-ask while
+# the player has the popup open. The sponsor is re-resolved at firing time, so
+# a conquest of Andalusia in 1515 redirects the expedition; one in 1530 does
+# not, which is the right way round.
 # --------------------------------------------------------------------
