@@ -213,9 +213,23 @@ running, the owner of **Sevilla** is offered the expedition:
 > - This does not suit our interests.
 
 Accepting grants the six locations of `cuetlaxtlan_province` - cuetlaxtlan,
-xamapan, nopiloa, teutila, puctlan, otatitlan. `ai_chance` is 100:0 in favour,
-so an AI or observer game always sails; a human player keeps the veto. It fires
-once per game either way.
+xamapan, nopiloa, teutila, puctlan, otatitlan - and then issues a colonial
+charter over the province:
+
+```
+create_colonial_charter = { target = province_definition:cuetlaxtlan_province }
+```
+
+That second step matters. Ownership alone leaves the sponsor holding six
+overseas provinces it cannot administer or expand from, which defeats the point
+of a beachhead. The charter hands off to the game's own colonial machinery: on
+the next monthly tick the sponsor gets the standard "create a colonial nation
+or keep it?" prompt, exactly as if the colony had finished normally. Nothing
+here synthesises a subject, so whatever rules M&T attaches to colonial nations
+apply unchanged.
+
+`ai_chance` is 100:0 in favour, so an AI or observer game always sails; a human
+player keeps the veto. It fires once per game either way.
 
 The sponsor is **whoever holds Seville at the time**, not a hardcoded Spain.
 Historically that is the same thing - the Indies trade ran out of Seville under
@@ -228,8 +242,10 @@ location marks all 325 as `nwp_contacted`, so six does exactly what one would.
 The other five are a gameplay foothold, on the reasoning that a port with a
 hinterland gives the AI something to push inland from.
 
-Measured: the grant fires, `contacted` goes 0 -> 325 on the next monthly tick,
-and Mesoamerican population turns over immediately.
+Measured end to end: the expedition popup renders with both options, accepting
+transfers all six locations, the charter produces the colonial-nation prompt on
+the next tick, `contacted` goes 0 -> 325, and Mesoamerican population turns over
+immediately.
 
 ## Running it
 
