@@ -47,7 +47,7 @@ cocoliztli = {
 						population > 10
 						continent = continent:america
 						OR = {
-							owner_from_old_world = yes
+							has_variable = nwp_contacted
 							has_variable = had_great_pestilence_in_location
 							location_has_pestilence_trigger = yes
 						}
@@ -81,11 +81,23 @@ cocoliztli = {
 					continental_climate_trigger = yes
 				}
 
-				# Only where the colonial regime has actually arrived: the
-				# 1545 catastrophe followed congregacion, forced labour and
-				# the collapse of the maintained agricultural landscape.
+				# Only where contact has actually happened - but contact, not
+				# ownership.
+				#
+				# MEASURED 1565: this clause read `owner_from_old_world = yes`
+				# and the disease never spawned once in 77 years. It could only
+				# appear in a location Europe already OWNED, and in that run
+				# Spain owned a single Mesoamerican location. Meanwhile the
+				# stamping sweeps run off `nwp_contacted`, which the Situation
+				# sets on every location in a region as soon as Europe owns any
+				# location in it - so the spawn gate was orders of magnitude
+				# stricter than the stamp gate covering the same ground.
+				#
+				# Historically it was backwards too. Cocoliztli and smallpox ran
+				# far ahead of the conquistadors; Mesoamerica was devastated
+				# before most of it was ever administered from Spain.
 				OR = {
-					owner_from_old_world = yes
+					has_variable = nwp_contacted
 					has_variable = had_great_pestilence_in_location
 					location_has_pestilence_trigger = yes
 				}

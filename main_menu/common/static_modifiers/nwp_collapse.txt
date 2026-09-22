@@ -15,9 +15,9 @@
 # New modifier keys, so no REPLACE:/INJECT: prefix. Definition idiom copied
 # from M&T's main_menu/common/static_modifiers/MnT_centers.txt.
 #
-# NOT YET APPLIED BY ANYTHING. These need an on_action or event hook that
-# stamps them onto affected locations with a century-plus duration. See README
-# section "Not done yet".
+# Applied by the monthly sweeps in in_game/common/situations/
+# nwp_demographic_collapse.txt, stamped for 60 years and gated on region
+# contact, with new stamps stopping at 1600.
 
 # CAPACITY IS THE LOAD-BEARING FIELD HERE. Measured 1676: Mesoamerica holds
 # 19.8M across 325 locations at 0.610 fill, so ~100k capacity per location -
@@ -76,8 +76,20 @@ nwp_colonial_labour_regime = {
 	game_data = {
 		category = location
 	}
-	local_population_growth = -0.012	# was -0.008; measured steady state was
-									# only -0.66%/yr against a -1.21 to -1.57 target
+	# -0.012 -> -0.009 to make room for the disease.
+	#
+	# At -0.012 this modifier, on 1,793 locations, was producing the ENTIRE
+	# -67.9% at 1565 by itself, because cocoliztli never spawned and
+	# nwp_agricultural_collapse is disease-gated (frozen at 23 of 325 in
+	# Mesoamerica). Fixing the spawn gate brings agricultural collapse and the
+	# disease's own -0.05 location modifier online across most of the region,
+	# so labour regime no longer has to carry it alone.
+	#
+	# Deliberately a modest cut: the brief is to land under the 1-3M target
+	# rather than risk missing it high. Rough decomposition of the measured
+	# -1.382%/yr suggests this lands near -1.7 to -2.0%/yr sustained, before
+	# epidemic mortality spikes - roughly 1.8-2.3M at 1600.
+	local_population_growth = -0.009	# was -0.008, then -0.012
 	local_population_capacity_modifier = -0.40
 	local_monthly_development = -0.006
 	local_prosperity_decay = 0.25
@@ -100,7 +112,9 @@ nwp_colonial_labour_regime = {
 # editing their definitions, which would change them globally and break the
 # Old World balance M&T tuned them for.
 #
-# NOT YET APPLIED BY ANYTHING - same hook problem as the collapse modifiers.
+# Applied and lifted every month by the Situation sweep, keyed on
+# dominant_culture: a location that has become settler-majority stops being
+# virgin soil. Measured at ~4,300 locations from 1536 on.
 nwp_virgin_soil = {
 	game_data = {
 		category = location

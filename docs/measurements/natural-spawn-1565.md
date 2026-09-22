@@ -171,3 +171,46 @@ One-line fix, not applied pending a decision on overshoot: swap
 
 A `::NWPROLL::` diagnostic has been added to the spawn block to separate "never
 rolled" from "rolled and found nothing eligible" on the next run.
+
+---
+
+## Changes made after this checkpoint
+
+Both applied together, since the second only makes sense given the first.
+
+**1. The spawn gate follows contact, not ownership.**
+
+```
+-    owner_from_old_world = yes
++    has_variable = nwp_contacted
+```
+
+`nwp_contacted` is the flag the Situation already sets on every American
+location in a region once Europe owns any location in it. The disease now
+spawns on the same footprint the stamping sweeps already cover.
+
+**2. `nwp_colonial_labour_regime` population growth -0.012 -> -0.009.**
+
+A deliberately modest cut. At -0.012 across 1,793 locations this modifier was
+producing the whole -67.9% on its own; with the disease live,
+`nwp_agricultural_collapse` (-0.010) comes off its frozen 23 of 325 and the
+disease's own -0.05 location modifier applies during waves.
+
+Rough decomposition of the measured -1.382%/yr:
+
+| Component | Approx. contribution |
+|---|---|
+| Control growth trend | +0.26 |
+| labour_regime, ~100% coverage | -1.20 |
+| agri_collapse, 7% coverage | -0.07 |
+| measles, virgin_soil, residual | -0.37 |
+| **Net** | **-1.38** |
+
+Substituting -0.009 for labour regime and assuming agricultural collapse
+reaches 70-100% coverage gives **-1.7 to -2.0%/yr sustained**, which projects
+from 4,605.83k at 1565 to **roughly 2.3-2.5M at 1600 before epidemic mortality
+spikes**, and plausibly 1.8-2.3M with them.
+
+This decomposition is rough - it attributes the residual to measles and virgin
+soil without isolating either, and it assumes coverage figures that have not
+been measured. Treat the projection as a direction, not a number.

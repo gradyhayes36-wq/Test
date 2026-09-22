@@ -1,4 +1,4 @@
-# Run protocol: fresh 1488, natural spawn
+﻿# Run protocol: fresh 1488, natural spawn
 
 Everything below assumes the current branch. No `nwp.6`, and **no `nwp.7`** —
 colonial disruption now applies hemisphere-wide once the Situation starts, so
@@ -49,6 +49,15 @@ years apart should bite rather than fizzle as they did in the last run.
 `::NWPDIS::` reports smallpox, measles and influenza counts alongside
 cocoliztli, so a wave that is actually M&T's own disease is distinguishable
 from ours.
+
+`::NWPROLL::` prints every time the spawn roll succeeds, carrying the number of
+locations that pass the eligibility limit ignoring climate. It exists because
+the 1488 run produced zero `::NWPSPAWN::` lines in 77 years and there was no
+way to tell "the roll never came up" from "it came up repeatedly and found
+nothing to spawn into". `::NWPROLL::` lines with `eligible_ignoring_climate=0`
+mean the limit is too strict; `::NWPROLL::` with a nonzero count and no
+matching `::NWPSPAWN::` means the climate clause is the blocker; no
+`::NWPROLL::` at all means the roll genuinely is not firing.
 
 ## If no natural wave has spawned by ~1530
 
