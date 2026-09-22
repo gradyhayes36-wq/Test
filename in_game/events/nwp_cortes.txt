@@ -48,15 +48,19 @@
 #   change_location_owner    CONFIRMED at runtime - Xamapan flipped owner
 #
 # RULED OUT:
-#   trigger_event            "Unknown effect" - the bare form is not valid
+#   every firing effect except trigger_event_silently: trigger_event,
+#   fire_event, show_event, send_event, country_event,
+#   trigger_event_with_popup, trigger_event_visible, trigger_event_shown
 #
 #   cuetlaxtlan_province     composition read from the game files:
 #                            cuetlaxtlan xamapan nopiloa teutila puctlan
 #                            otatitlan - all granted individually
 #
 # STILL OPEN:
-#   how to fire a VISIBLE event     - nwp.29 probes eight forms. This is the
-#                                     only thing left between here and live.
+#   whether trigger_event_silently suppresses the POPUP or only the
+#   notification. The hook is live either way - if it does suppress, the
+#   engine resolves on ai_chance (100:0 in favour) and the player loses the
+#   veto but not the expedition. Fire `event nwp.20` to find out.
 # ================================================================
 
 
@@ -147,37 +151,6 @@ nwp.24 = {
 			error_log = "::NWPKEY::HIT region:mesoamerica_region (control - this one must hit)"
 		}
 		error_log = "::NWPKEY::probe complete"
-	}
-}
-
-
-# --------------------------------------------------------------------
-# nwp.29 - DEBUG. How do you fire a VISIBLE event?
-#
-# MEASURED: "Unknown effect trigger_event". Only trigger_event_silently is
-# known to work, and that suppresses the popup - which defeats the whole
-# point of giving the player a choice.
-#
-# Never fired. Load-time validation names the fakes.
-# --------------------------------------------------------------------
-nwp.29 = {
-	type = country_event
-	title = hidden_event.t
-	hidden = yes
-	orphan = yes
-
-	immediate = {
-		if = {
-			limit = { always = no }
-			trigger_event = { id = nwp.20 }
-			fire_event = nwp.20
-			show_event = nwp.20
-			trigger_event_with_popup = nwp.20
-			trigger_event_visible = nwp.20
-			send_event = nwp.20
-			country_event = nwp.20
-			trigger_event_shown = nwp.20
-		}
 	}
 }
 

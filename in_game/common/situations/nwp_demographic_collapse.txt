@@ -86,27 +86,36 @@ nwp_demographic_collapse = {
 		# a situation is a singleton so it serves the same purpose.
 		#
 		# Set BEFORE firing, so it cannot re-ask while the popup is open.
-		# DISABLED pending nwp.29. MEASURED: "Unknown effect trigger_event".
-		# The bare form is not valid - only trigger_event_silently is, and
-		# that would suppress the popup and take the player's choice away.
+		# MEASURED: trigger_event_silently is the ONLY firing effect in this
+		# engine. trigger_event, fire_event, show_event, send_event,
+		# country_event, trigger_event_with_popup, trigger_event_visible and
+		# trigger_event_shown were all reported "Unknown effect".
 		#
-		# Left commented rather than live, because as written this was worse
-		# than broken: it sets nwp_cortes_done and THEN fires nothing, so the
-		# one-shot is consumed on the first tick after 1510 and the expedition
-		# can never happen for the rest of the game.
+		# So "silently" is not a variant, it is the name. Whether the popup
+		# appears is therefore almost certainly a property of the EVENT -
+		# nwp.20 has no hidden = yes, and has options - rather than of the
+		# call. nwp.1 is fired the same way and IS hidden = yes, which is why
+		# it never shows anything.
 		#
-		#	if = {
-		#		limit = {
-		#			NOT = { has_variable = nwp_cortes_done }
-		#			current_date > 1510.1.1
-		#		}
-		#		set_variable = nwp_cortes_done
-		#		location:sevilla ?= {
-		#			owner ?= {
-		#				<FIRING_EFFECT> = nwp.20
-		#			}
-		#		}
-		#	}
+		# UNCONFIRMED: if "silently" really does suppress the popup, a human
+		# player gets no choice and the engine resolves it on ai_chance, which
+		# is 100:0 in favour. That degrades the veto but not the outcome.
+		# Fire `event nwp.20` from the console to see which it is.
+		#
+		# The flag is set BEFORE firing so it cannot re-ask while the popup is
+		# open.
+		if = {
+			limit = {
+				NOT = { has_variable = nwp_cortes_done }
+				current_date > 1510.1.1
+			}
+			set_variable = nwp_cortes_done
+			location:sevilla ?= {
+				owner ?= {
+					trigger_event_silently = nwp.20
+				}
+			}
+		}
 
 		# Which regions has Europe actually reached?
 		#
