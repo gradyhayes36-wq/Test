@@ -122,6 +122,21 @@ nwp.24 = {
 		province:cuetlaxtlan ?= {
 			error_log = "::NWPKEY::HIT province:cuetlaxtlan"
 		}
+
+		# Capitalisation. Probably irrelevant - location:sevilla resolved in
+		# lowercase, so the convention is lowercase - but the engine is likely
+		# case-sensitive and these cost nothing.
+		location:Xamapan ?= {
+			error_log = "::NWPKEY::HIT location:Xamapan"
+		}
+		province:Cuetlaxtlan ?= {
+			error_log = "::NWPKEY::HIT province:Cuetlaxtlan"
+		}
+
+		# And the possibility that `province:` is not a scope type in EU5 at
+		# all, which would explain cuetlaxtlan_province failing even if the
+		# key were right. If province:cuetlaxtlan_province was a bad SCOPE
+		# rather than a bad KEY, no province: line here will ever hit.
 		error_log = "::NWPKEY::probe complete"
 	}
 }
