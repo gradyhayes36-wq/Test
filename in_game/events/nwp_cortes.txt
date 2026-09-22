@@ -24,135 +24,28 @@
 # Player-agnostic either way: it fires the same whoever the human is playing,
 # including observer mode.
 #
-# ============================ STATUS ============================
-# CONFIRMED by probe:
-#   location:sevilla         valid, and `owner` resolves off it
-#   every_owned_location     valid in country scope (reported 244)
-#   location:xamapan         valid  - this is Veracruz
-#   area:tochtepec_area      valid
-#   region:mesoamerica_region valid (control)
-#   option = { }             event choices are options
-#   change_location_owner    the ownership-transfer effect
+# ======================= ALL CONFIRMED IN GAME =======================
+# location:sevilla + owner      the sponsor resolves
+# location:<key>                addressable; province: and area: are not
+#                               (area: is, province: is not)
+# change_location_owner         transfers ownership - verified on the map
+# option = { } + outcome = neutral   events need both; outcome is a scalar
+#                               EAudioEventOutcome, taking positive,
+#                               negative or neutral
+# trigger_event_silently        the ONLY firing effect in this engine. It
+#                               suppresses the notification, NOT the popup -
+#                               nwp.20 renders in full with both options.
+#                               Whether an event shows is decided by
+#                               `hidden` on the event itself.
+# cuetlaxtlan_province          cuetlaxtlan xamapan nopiloa teutila puctlan
+#                               otatitlan - granted individually
 #
-# RULED OUT by probe:
-#   province:                NOT an addressable scope type, despite
-#                            cuetlaxtlan_province being a real province key
-#   outcome = { }            outcome is a scalar audio enum, not a block
-#   set_owner, set_location_owner, change_owner, set_owner_and_controller,
-#   transfer_location, cede_location, set_country_owner, add_owned_location,
-#   set_controller, become_owned_by        all "Unknown effect"
+# Verified end to end: the grant fires, contacted goes 0 -> 325 on the next
+# monthly tick, and meso_pop turns over immediately.
 #
-#   outcome = neutral        EAudioEventOutcome takes positive, negative or
-#                            neutral; good, bad, none and default are not
-#
-#   change_location_owner    CONFIRMED at runtime - Xamapan flipped owner
-#
-# RULED OUT:
-#   every firing effect except trigger_event_silently: trigger_event,
-#   fire_event, show_event, send_event, country_event,
-#   trigger_event_with_popup, trigger_event_visible, trigger_event_shown
-#
-#   cuetlaxtlan_province     composition read from the game files:
-#                            cuetlaxtlan xamapan nopiloa teutila puctlan
-#                            otatitlan - all granted individually
-#
-# STILL OPEN:
-#   whether trigger_event_silently suppresses the POPUP or only the
-#   notification. The hook is live either way - if it does suppress, the
-#   engine resolves on ai_chance (100:0 in favour) and the player loses the
-#   veto but not the expedition. Fire `event nwp.20` to find out.
-# ================================================================
-
-
-# --------------------------------------------------------------------
-# nwp.23 - DEBUG. Resolve the sponsor and report its New World holdings.
-# Console: event nwp.23
-#
-# Tests tokens 2 and 3, and the real trigger condition, in one command.
-# every_owned_location is already proven - nwp.1 uses it successfully.
-# --------------------------------------------------------------------
-nwp.23 = {
-	type = country_event
-	title = hidden_event.t
-	hidden = yes
-	orphan = yes
-
-	immediate = {
-		location:sevilla ?= {
-			owner ?= {
-				save_scope_as = cortes_sponsor
-				# MEASURED 1337: this resolved, and reported
-				# new_world_locations=0 even with a Castilian colony in Cuba
-				# on the map - and in the same log the Situation's can_start
-				# fired, which proves SOME Old World power owns a populated
-				# American location. So either Sevilla's owner is not the
-				# country holding Cuba, or the colony belongs to a subject.
-				#
-				# total_locations separates those: a Castile-sized number
-				# means the owner is right and the American filter is wrong;
-				# a handful means Sevilla belongs to someone unexpected.
-				set_local_variable = {
-					name = nwp_all
-					value = { every_owned_location = { add = 1 } }
-				}
-				set_local_variable = {
-					name = nwp_nw
-					value = {
-						every_owned_location = {
-							limit = { continent = continent:america }
-							add = 1
-						}
-					}
-				}
-				error_log = "::NWPCORTES::[GetCurrentYear]:Sevilla owner resolved:total_locations=[SCOPE.GetLocalVariable('nwp_all').GetValue]:new_world_locations=[SCOPE.GetLocalVariable('nwp_nw').GetValue]"
-				remove_local_variable = nwp_all
-				remove_local_variable = nwp_nw
-			}
-		}
-	}
-}
-
-
-# --------------------------------------------------------------------
-# nwp.24 - DEBUG. Which of these are valid SCOPE TYPES?
-# Console: event nwp.24
-#
-# The in-game debug panel settled the keys outright:
-#
-#   Location Tag   xamapan
-#   Province       cuetlaxtlan_province (3544)
-#   Area           tochtepec_area (608)
-#   Region         mesoamerica_region (61)
-#
-# So cuetlaxtlan_province is a real province key after all. What remains
-# unknown is whether `province:` and `area:` are addressable scope types the
-# way `region:` demonstrably is - the submod already uses
-# region:mesoamerica_region every month without complaint.
-#
-# Grants nothing.
-# --------------------------------------------------------------------
-nwp.24 = {
-	type = country_event
-	title = hidden_event.t
-	hidden = yes
-	orphan = yes
-
-	immediate = {
-		location:xamapan ?= {
-			error_log = "::NWPKEY::HIT location:xamapan"
-		}
-		province:cuetlaxtlan_province ?= {
-			error_log = "::NWPKEY::HIT province:cuetlaxtlan_province"
-		}
-		area:tochtepec_area ?= {
-			error_log = "::NWPKEY::HIT area:tochtepec_area"
-		}
-		region:mesoamerica_region ?= {
-			error_log = "::NWPKEY::HIT region:mesoamerica_region (control - this one must hit)"
-		}
-		error_log = "::NWPKEY::probe complete"
-	}
-}
+# Kept for testing: nwp.27 forces the expedition from the console without
+# waiting for 1510.
+# =====================================================================
 
 
 # --------------------------------------------------------------------

@@ -1,4 +1,4 @@
-# New World Pestilence
+﻿# New World Pestilence
 
 A submod for [MEIOU & Taxes](https://github.com/MEIOU-and-Taxes/MnT-EU5) (EU5,
 `meiou_and_taxes` 0.2.9, game 1.3.*) that makes post-contact epidemics actually
@@ -196,6 +196,40 @@ Projected forward with the measured −1.41%/yr suppression and no further waves
 that reaches **1.91M at 1600** against a 1–3M target. The open question is
 whether repeated waves overshoot, which resistance decay and coverage
 saturation may or may not restrain.
+
+## The Cortes expedition
+
+A 12-hour unsteered observer run finished in 1867 with no European power ever
+having taken a Mesoamerican location. Nothing in this submod is eligible to
+fire in a region Europe has not reached, so the entire collapse model sat idle
+over the one region it was built for. EU5's Conquistador mechanic would
+normally cover this; M&T has it disabled.
+
+So `nwp.20` forces the historical beachhead. After 1510, once the Situation is
+running, the owner of **Sevilla** is offered the expedition:
+
+> **The Mainland Beyond the Islands**
+> - Let the expedition sail!
+> - This does not suit our interests.
+
+Accepting grants the six locations of `cuetlaxtlan_province` - cuetlaxtlan,
+xamapan, nopiloa, teutila, puctlan, otatitlan. `ai_chance` is 100:0 in favour,
+so an AI or observer game always sails; a human player keeps the veto. It fires
+once per game either way.
+
+The sponsor is **whoever holds Seville at the time**, not a hardcoded Spain.
+Historically that is the same thing - the Indies trade ran out of Seville under
+the Casa de Contratacion - but it degrades into alternate history gracefully,
+and it avoids depending on whether Spain exists as a tag yet. If Morocco has
+retaken Andalusia by 1510, Morocco gets Veracruz.
+
+**This does not change the demographic model.** One European-owned Mesoamerican
+location marks all 325 as `nwp_contacted`, so six does exactly what one would.
+The other five are a gameplay foothold, on the reasoning that a port with a
+hinterland gives the AI something to push inland from.
+
+Measured: the grant fires, `contacted` goes 0 -> 325 on the next monthly tick,
+and Mesoamerican population turns over immediately.
 
 ## Running it
 
