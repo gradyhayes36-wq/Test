@@ -68,6 +68,13 @@ cocoliztli = {
 				value = 1	# was 0.75; natural spawns at 0.75 never established
 				save_scope_as = outbreak
 			}
+			# Where did it land, and how dense? random_ownable_location picks
+			# uniformly among eligible locations, and eligibility needs European
+			# contact - so early spawns land in thin colonial outposts while the
+			# forced test spawn landed in Mesoamerica. This logs the difference.
+			set_local_variable = { name = nwp_spawn_pop value = population }
+			error_log = "::NWPSPAWN::[GetCurrentYear]:cocoliztli spawned:pop=[SCOPE.GetLocalVariable('nwp_spawn_pop').GetValue]"
+			remove_local_variable = nwp_spawn_pop
 		}
 	}
 

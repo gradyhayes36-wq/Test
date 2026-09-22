@@ -309,3 +309,36 @@ nwp.6 = {
 		remove_local_variable = nwp_dbg
 	}
 }
+
+# CONTROLLED TEST: does cocoliztli fail in thin populations?
+#
+# nwp.7 seeds Mesoamerica (~36k pops per location) and produced a wave that
+# reached 243 of 325 locations. Every natural spawn has fizzled, and every
+# natural spawn landed in a European-contacted location - which early on means
+# the Caribbean at ~1.3k per location, or the East Coast at ~2.8k.
+#
+# Same disease, same value = 1, different density. Run both and compare
+# cocoliztli_locs over the following decade. If the Caribbean seed dies while
+# Mesoamerica explodes, density is the variable and the fix is to bias the
+# spawn toward dense populations, not to make the disease stronger.
+nwp.5 = {
+	type = country_event
+	title = hidden_event.t
+	hidden = yes
+	orphan = yes
+
+	immediate = {
+		region:caribbean_region = {
+			random_ownable_location_in_region = {
+				limit = { population > 1 }
+				spawn_disease = {
+					disease = disease:cocoliztli
+					value = 1
+				}
+				set_local_variable = { name = nwp_dbg_pop value = population }
+				error_log = "::NWPSPAWN::DEBUG seeded Caribbean:pop=[SCOPE.GetLocalVariable('nwp_dbg_pop').GetValue]"
+				remove_local_variable = nwp_dbg_pop
+			}
+		}
+	}
+}
