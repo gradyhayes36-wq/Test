@@ -89,16 +89,22 @@ nwp.23 = {
 
 
 # --------------------------------------------------------------------
-# nwp.24 - DEBUG. Which key form does Veracruz actually answer to?
+# nwp.24 - DEBUG. Which of these are valid SCOPE TYPES?
 # Console: event nwp.24
 #
-# MEASURED 1337: neither nwp.21 nor nwp.22 logged anything, and their
-# error_logs sit INSIDE the scope block - so cuetlaxtlan_province resolved
-# as neither a province nor a location. The in-game name is Xamapan, not
-# Veracruz, so the key is probably built on that instead.
+# The in-game debug panel settled the keys outright:
 #
-# This grants nothing. Every candidate is ?= guarded with its own log line,
-# so one console command says which form exists.
+#   Location Tag   xamapan
+#   Province       cuetlaxtlan_province (3544)
+#   Area           tochtepec_area (608)
+#   Region         mesoamerica_region (61)
+#
+# So cuetlaxtlan_province is a real province key after all. What remains
+# unknown is whether `province:` and `area:` are addressable scope types the
+# way `region:` demonstrably is - the submod already uses
+# region:mesoamerica_region every month without complaint.
+#
+# Grants nothing.
 # --------------------------------------------------------------------
 nwp.24 = {
 	type = country_event
@@ -110,33 +116,15 @@ nwp.24 = {
 		location:xamapan ?= {
 			error_log = "::NWPKEY::HIT location:xamapan"
 		}
-		location:xamapan_location ?= {
-			error_log = "::NWPKEY::HIT location:xamapan_location"
+		province:cuetlaxtlan_province ?= {
+			error_log = "::NWPKEY::HIT province:cuetlaxtlan_province"
 		}
-		province:xamapan_province ?= {
-			error_log = "::NWPKEY::HIT province:xamapan_province"
+		area:tochtepec_area ?= {
+			error_log = "::NWPKEY::HIT area:tochtepec_area"
 		}
-		location:cuetlaxtlan ?= {
-			error_log = "::NWPKEY::HIT location:cuetlaxtlan"
+		region:mesoamerica_region ?= {
+			error_log = "::NWPKEY::HIT region:mesoamerica_region (control - this one must hit)"
 		}
-		province:cuetlaxtlan ?= {
-			error_log = "::NWPKEY::HIT province:cuetlaxtlan"
-		}
-
-		# Capitalisation. Probably irrelevant - location:sevilla resolved in
-		# lowercase, so the convention is lowercase - but the engine is likely
-		# case-sensitive and these cost nothing.
-		location:Xamapan ?= {
-			error_log = "::NWPKEY::HIT location:Xamapan"
-		}
-		province:Cuetlaxtlan ?= {
-			error_log = "::NWPKEY::HIT province:Cuetlaxtlan"
-		}
-
-		# And the possibility that `province:` is not a scope type in EU5 at
-		# all, which would explain cuetlaxtlan_province failing even if the
-		# key were right. If province:cuetlaxtlan_province was a bad SCOPE
-		# rather than a bad KEY, no province: line here will ever hit.
 		error_log = "::NWPKEY::probe complete"
 	}
 }
@@ -242,15 +230,21 @@ nwp.20 = {
 		# alternate history every run.
 		ai_chance = { factor = 100 }
 
+		# Province first - that is the whole Veracruz foothold, and what was
+		# actually asked for. Falls back to the single location if `province:`
+		# turns out not to be an addressable scope type. Both are ?= guarded,
+		# so whichever is unavailable no-ops and the other still lands a
+		# beachhead. Keys confirmed from the in-game debug panel.
 		province:cuetlaxtlan_province ?= {
 			every_location_in_province = {
 				set_owner = root
 			}
+			error_log = "::NWPCORTES::[GetCurrentYear]:expedition accepted, Cuetlaxtlan province granted"
 		}
-		location:cuetlaxtlan_province ?= {
+		location:xamapan ?= {
 			set_owner = root
+			error_log = "::NWPCORTES::[GetCurrentYear]:expedition accepted, Xamapan granted"
 		}
-		error_log = "::NWPCORTES::[GetCurrentYear]:expedition accepted, Veracruz granted"
 	}
 
 	option = {
