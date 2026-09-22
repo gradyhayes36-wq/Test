@@ -56,6 +56,20 @@ nwp.23 = {
 		location:sevilla ?= {
 			owner ?= {
 				save_scope_as = cortes_sponsor
+				# MEASURED 1337: this resolved, and reported
+				# new_world_locations=0 even with a Castilian colony in Cuba
+				# on the map - and in the same log the Situation's can_start
+				# fired, which proves SOME Old World power owns a populated
+				# American location. So either Sevilla's owner is not the
+				# country holding Cuba, or the colony belongs to a subject.
+				#
+				# total_locations separates those: a Castile-sized number
+				# means the owner is right and the American filter is wrong;
+				# a handful means Sevilla belongs to someone unexpected.
+				set_local_variable = {
+					name = nwp_all
+					value = { every_owned_location = { add = 1 } }
+				}
 				set_local_variable = {
 					name = nwp_nw
 					value = {
@@ -65,10 +79,50 @@ nwp.23 = {
 						}
 					}
 				}
-				error_log = "::NWPCORTES::[GetCurrentYear]:Sevilla owner resolved:new_world_locations=[SCOPE.GetLocalVariable('nwp_nw').GetValue]"
+				error_log = "::NWPCORTES::[GetCurrentYear]:Sevilla owner resolved:total_locations=[SCOPE.GetLocalVariable('nwp_all').GetValue]:new_world_locations=[SCOPE.GetLocalVariable('nwp_nw').GetValue]"
+				remove_local_variable = nwp_all
 				remove_local_variable = nwp_nw
 			}
 		}
+	}
+}
+
+
+# --------------------------------------------------------------------
+# nwp.24 - DEBUG. Which key form does Veracruz actually answer to?
+# Console: event nwp.24
+#
+# MEASURED 1337: neither nwp.21 nor nwp.22 logged anything, and their
+# error_logs sit INSIDE the scope block - so cuetlaxtlan_province resolved
+# as neither a province nor a location. The in-game name is Xamapan, not
+# Veracruz, so the key is probably built on that instead.
+#
+# This grants nothing. Every candidate is ?= guarded with its own log line,
+# so one console command says which form exists.
+# --------------------------------------------------------------------
+nwp.24 = {
+	type = country_event
+	title = hidden_event.t
+	hidden = yes
+	orphan = yes
+
+	immediate = {
+		location:xamapan ?= {
+			error_log = "::NWPKEY::HIT location:xamapan"
+		}
+		location:xamapan_location ?= {
+			error_log = "::NWPKEY::HIT location:xamapan_location"
+		}
+		province:xamapan_province ?= {
+			error_log = "::NWPKEY::HIT province:xamapan_province"
+		}
+		location:cuetlaxtlan ?= {
+			error_log = "::NWPKEY::HIT location:cuetlaxtlan"
+		}
+		province:cuetlaxtlan ?= {
+			error_log = "::NWPKEY::HIT province:cuetlaxtlan"
+		}
+		error_log = "::NWPKEY::probe complete"
 	}
 }
 
