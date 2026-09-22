@@ -14,28 +14,67 @@
 # here conquers Mexico. It gives the beachhead and leaves the rest to the AI,
 # the diseases and the region-contact sweep.
 #
-# THE SPONSOR IS WHOEVER OWNS SEVILLE, not a hardcoded Spain. Cortes sailed
-# under Castile because Castile held Andalusia and the Casa de Contratacion;
-# if some other power holds Seville in 1519, the expedition is theirs. This
-# also removes the tag guess entirely - no c:SPA, no question of whether the
-# Iberian union has formed yet - and it gives you the alternate history free:
-# a Morocco that reconquered Andalusia inherits the conquest of Mexico.
+# SPONSOR: whoever owns Sevilla, not a hardcoded Spain. Historically the same
+# thing - the Indies trade was run from Seville under the Casa de
+# Contratacion, and Cortes sailed on Castilian authority - but it degrades
+# into alternate history gracefully. If Morocco retakes Andalusia before the
+# expedition launches, Morocco gets Veracruz. It also dodges the question of
+# whether Spain exists as a tag yet at this date.
+#
+# Player-agnostic either way: it fires the same whoever the human is playing,
+# including observer mode.
 #
 # ============================ UNVERIFIED ============================
-# These could not be checked against the repo's vanilla reference files,
-# which contain only modifier definitions and situations:
+# Four tokens below could not be checked against the repo's vanilla reference
+# files, which contain only modifier definitions and situations:
 #
 #   1. set_owner              - the ownership-transfer effect name
-#   2. seville                - Seville's key, and province: vs location:
-#   3. cuetlaxtlan_province   - same question for Veracruz
+#   2. location:sevilla       - Seville's location key
+#   3. owner                  - location -> country scope transition
+#   4. cuetlaxtlan_province   - province key, and whether it scopes as
+#                               province: or location:
 #
-# nwp.21 and nwp.22 settle all of it from the console. Do not enable nwp.20
-# until one of them is confirmed working.
+# The three probes below settle all four from the console before any of this
+# is wired into the monthly sweep. Do not enable nwp.20 until they pass.
 # ====================================================================
 
 
 # --------------------------------------------------------------------
-# nwp.21 - DEBUG. Both keys treated as PROVINCES.
+# nwp.23 - DEBUG. Resolve the sponsor and report its New World holdings.
+# Console: event nwp.23
+#
+# Tests tokens 2 and 3, and the real trigger condition, in one command.
+# every_owned_location is already proven - nwp.1 uses it successfully.
+# --------------------------------------------------------------------
+nwp.23 = {
+	type = country_event
+	title = hidden_event.t
+	hidden = yes
+	orphan = yes
+
+	immediate = {
+		location:sevilla ?= {
+			owner ?= {
+				save_scope_as = cortes_sponsor
+				set_local_variable = {
+					name = nwp_nw
+					value = {
+						every_owned_location = {
+							limit = { continent = continent:america }
+							add = 1
+						}
+					}
+				}
+				error_log = "::NWPCORTES::[GetCurrentYear]:Sevilla owner resolved:new_world_locations=[SCOPE.GetLocalVariable('nwp_nw').GetValue]"
+				remove_local_variable = nwp_nw
+			}
+		}
+	}
+}
+
+
+# --------------------------------------------------------------------
+# nwp.21 - DEBUG. Grant Veracruz to Sevilla's owner, key read as a PROVINCE.
 # Console: event nwp.21
 # --------------------------------------------------------------------
 nwp.21 = {
@@ -45,24 +84,21 @@ nwp.21 = {
 	orphan = yes
 
 	immediate = {
-		province:seville ?= {
-			owner ?= {
-				save_scope_as = cortes_sponsor
-				error_log = "::NWPCORTES::[GetCurrentYear]:province-scope:sponsor resolved from Seville"
-			}
+		location:sevilla ?= {
+			owner ?= { save_scope_as = cortes_sponsor }
 		}
 		province:cuetlaxtlan_province ?= {
 			every_location_in_province = {
 				set_owner = scope:cortes_sponsor
 			}
-			error_log = "::NWPCORTES::[GetCurrentYear]:province-scope:Veracruz grant attempted"
+			error_log = "::NWPCORTES::[GetCurrentYear]:DEBUG province-scope grant attempted"
 		}
 	}
 }
 
 
 # --------------------------------------------------------------------
-# nwp.22 - DEBUG. Both keys treated as LOCATIONS.
+# nwp.22 - DEBUG. Same, key read as a LOCATION.
 # Console: event nwp.22
 # --------------------------------------------------------------------
 nwp.22 = {
@@ -72,15 +108,12 @@ nwp.22 = {
 	orphan = yes
 
 	immediate = {
-		location:seville ?= {
-			owner ?= {
-				save_scope_as = cortes_sponsor
-				error_log = "::NWPCORTES::[GetCurrentYear]:location-scope:sponsor resolved from Seville"
-			}
+		location:sevilla ?= {
+			owner ?= { save_scope_as = cortes_sponsor }
 		}
 		location:cuetlaxtlan_province ?= {
 			set_owner = scope:cortes_sponsor
-			error_log = "::NWPCORTES::[GetCurrentYear]:location-scope:Veracruz grant attempted"
+			error_log = "::NWPCORTES::[GetCurrentYear]:DEBUG location-scope grant attempted"
 		}
 	}
 }
@@ -89,28 +122,25 @@ nwp.22 = {
 # --------------------------------------------------------------------
 # nwp.20 - the real thing. NOT HOOKED UP YET.
 #
-# Once a probe confirms the spelling, the working branch goes here and this is
+# Once a probe confirms the grant, the working branch goes here and this gets
 # called from the Situation's on_monthly behind a global-variable guard:
 #
 #	if = {
 #		limit = {
 #			NOT = { has_global_variable = nwp_cortes_done }
 #			current_date > 1510.1.1
-#			continent:america = {
-#				any_location_in_continent = {
-#					population > 0
-#					owner_from_old_world = yes
+#			location:sevilla ?= {
+#				owner ?= {
+#					any_owned_location = { continent = continent:america }
 #				}
 #			}
 #		}
 #		set_global_variable = nwp_cortes_done
-#		trigger_event_silently = nwp.20
+#		location:sevilla.owner = { trigger_event_silently = nwp.20 }
 #	}
 #
-# Note the New World precondition is owner_from_old_world rather than "Seville's
-# owner specifically has a colony". Seville's owner gets the expedition, but
-# the trigger is that Europe has reached the Americas at all - otherwise a
-# landlocked Seville-holder who never sails still blocks the event forever, and
-# the whole point is that this must not depend on one AI's choices. Both the
-# date gate and that idiom are what can_start already uses successfully.
+# The date gate keeps it near 1519 rather than firing the moment Columbus
+# lands. The global variable makes it once per game. Note the sponsor is
+# re-resolved AT FIRING TIME, so a conquest of Andalusia in 1515 redirects the
+# expedition; one in 1530 does not, which is the right way round.
 # --------------------------------------------------------------------
