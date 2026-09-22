@@ -42,9 +42,13 @@
 #   transfer_location, cede_location, set_country_owner, add_owned_location,
 #   set_controller, become_owned_by        all "Unknown effect"
 #
+#   outcome = neutral        EAudioEventOutcome takes positive, negative or
+#                            neutral; good, bad, none and default are not
+#
 # STILL OPEN:
-#   EAudioEventOutcome legal values  - nwp.26 probes seven
-#   subject handling on the trigger  - see the hook note at the bottom
+#   nothing blocking. The hook is live. What remains untested is whether
+#   change_location_owner actually TRANSFERS ownership rather than merely
+#   existing - fire nwp.27 and look at the map.
 # ================================================================
 
 
@@ -140,37 +144,6 @@ nwp.24 = {
 
 
 # --------------------------------------------------------------------
-# nwp.26 - DEBUG. What are the legal values of EAudioEventOutcome?
-#
-# MEASURED: `outcome` is NOT the block that holds event choices. It is a
-# scalar enum - "Failed to read enum! Type: EAudioEventOutcome, Val {" - and
-# with it in place the engine reported "Event #nwp.20 has no options". So
-# events use `option` blocks AND carry an `outcome` audio cue.
-#
-# Same trick as the effect probe: bad enum values are reported at load with a
-# line number. Whichever line draws no complaint is the legal value.
-#
-# Delete this once answered.
-# --------------------------------------------------------------------
-nwp.26 = {
-	type = country_event
-	title = hidden_event.t
-	hidden = yes
-	orphan = yes
-
-	outcome = positive
-	outcome = negative
-	outcome = neutral
-	outcome = good
-	outcome = bad
-	outcome = none
-	outcome = default
-
-	immediate = { }
-}
-
-
-# --------------------------------------------------------------------
 # nwp.27 - DEBUG. Does change_location_owner actually work at runtime?
 # Console: event nwp.27
 #
@@ -202,9 +175,8 @@ nwp.27 = {
 # --------------------------------------------------------------------
 # nwp.20 - the Cortes expedition. VISIBLE, with a choice.
 #
-# NOT HOOKED UP YET - the probes above must confirm the grant first. It is
-# orphan = yes so it can be fired from the console to check the popup renders
-# and the localization resolves, without waiting on the trigger.
+# Hooked into the Situation's on_monthly. Still orphan = yes so it can also
+# be fired from the console for presentation checks.
 #
 # Two options, affirmative listed first so it is the player's default. The AI
 # takes it at 100:0, so an observer run or an AI Castile always follows
@@ -231,12 +203,17 @@ nwp.20 = {
 	desc = nwp.20.d
 	orphan = yes
 
-	# MEASURED: events use `option` blocks. The first attempt read the error
-	# "missing an outcome" as meaning EU5 renames options to outcomes; it does
-	# not. `outcome` is a separate scalar audio-cue enum, and switching the
-	# blocks over produced "Event #nwp.20 has no options" plus a parse
-	# cascade. Both are needed. nwp.26 probes the enum's legal values - once
-	# known, add `outcome = <value>` here.
+	# MEASURED: EAudioEventOutcome accepts positive, negative and neutral.
+	# good, bad, none and default were all rejected. This is an event-level
+	# audio cue, not a per-option one - the engine reported it missing against
+	# the event, not the options. neutral because this is a decision prompt
+	# rather than good or bad news arriving.
+	outcome = neutral
+
+	# Events use `option` blocks. The first attempt read the error "missing an
+	# outcome" as meaning EU5 renames options to outcomes; it does not, and
+	# switching the blocks over produced "Event #nwp.20 has no options" plus a
+	# parse cascade. Both are needed, and they are different things.
 	#
 	# Affirmative first so it is the player's default.
 	option = {
@@ -266,16 +243,22 @@ nwp.20 = {
 
 
 # --------------------------------------------------------------------
-# The hook, for the Situation's on_monthly once nwp.26 reports:
+# The hook, now live in the Situation's on_monthly:
 #
 #	if = {
 #		limit = {
-#			NOT = { has_global_variable = nwp_cortes_done }
+#			NOT = { has_variable = nwp_cortes_done }
 #			current_date > 1510.1.1
 #		}
-#		set_global_variable = nwp_cortes_done
-#		location:sevilla.owner ?= { trigger_event = { id = nwp.20 } }
+#		set_variable = nwp_cortes_done
+#		location:sevilla ?= { owner ?= { trigger_event = nwp.20 } }
 #	}
+#
+# Situation-scope set_variable, not a global variable: the situation form is
+# proven and the global form is not, and a situation is a singleton anyway.
+# The scope is nested rather than chained as location:sevilla.owner, and the
+# call is bare trigger_event rather than a { id = } block, both to stay on
+# constructs this codebase has already executed successfully.
 #
 # NOTE THE MISSING CONDITION. The plan was to require Sevilla's owner to hold
 # an American location. That does not work, and the probe shows why:

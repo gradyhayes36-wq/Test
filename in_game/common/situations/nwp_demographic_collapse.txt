@@ -66,6 +66,39 @@ nwp_demographic_collapse = {
 
 	# root = situation
 	on_monthly = {
+		# The Cortes expedition. See in_game/events/nwp_cortes.txt.
+		#
+		# A 12-hour unsteered observer run put no European power in
+		# Mesoamerica at all, so nothing here was ever eligible to fire over
+		# the one region this submod exists for. This forces the historical
+		# beachhead and leaves the rest to the AI.
+		#
+		# No "has a New World colony" condition, deliberately. The sponsor
+		# probe reported total_locations=244 : new_world_locations=0 in a game
+		# where this Situation had already started - so the colony sits on a
+		# subject, and requiring direct ownership would never fire. It does
+		# not need one either: this code only runs while the Situation is
+		# active, and can_start already requires an Old World power to own a
+		# populated American location.
+		#
+		# The flag lives on the situation rather than in a global variable.
+		# Situation-scope set_variable is proven; the global form is not, and
+		# a situation is a singleton so it serves the same purpose.
+		#
+		# Set BEFORE firing, so it cannot re-ask while the popup is open.
+		if = {
+			limit = {
+				NOT = { has_variable = nwp_cortes_done }
+				current_date > 1510.1.1
+			}
+			set_variable = nwp_cortes_done
+			location:sevilla ?= {
+				owner ?= {
+					trigger_event = nwp.20
+				}
+			}
+		}
+
 		# Which regions has Europe actually reached?
 		#
 		# Without this the Situation's own start condition - ANY Old World
