@@ -86,18 +86,27 @@ nwp_demographic_collapse = {
 		# a situation is a singleton so it serves the same purpose.
 		#
 		# Set BEFORE firing, so it cannot re-ask while the popup is open.
-		if = {
-			limit = {
-				NOT = { has_variable = nwp_cortes_done }
-				current_date > 1510.1.1
-			}
-			set_variable = nwp_cortes_done
-			location:sevilla ?= {
-				owner ?= {
-					trigger_event = nwp.20
-				}
-			}
-		}
+		# DISABLED pending nwp.29. MEASURED: "Unknown effect trigger_event".
+		# The bare form is not valid - only trigger_event_silently is, and
+		# that would suppress the popup and take the player's choice away.
+		#
+		# Left commented rather than live, because as written this was worse
+		# than broken: it sets nwp_cortes_done and THEN fires nothing, so the
+		# one-shot is consumed on the first tick after 1510 and the expedition
+		# can never happen for the rest of the game.
+		#
+		#	if = {
+		#		limit = {
+		#			NOT = { has_variable = nwp_cortes_done }
+		#			current_date > 1510.1.1
+		#		}
+		#		set_variable = nwp_cortes_done
+		#		location:sevilla ?= {
+		#			owner ?= {
+		#				<FIRING_EFFECT> = nwp.20
+		#			}
+		#		}
+		#	}
 
 		# Which regions has Europe actually reached?
 		#

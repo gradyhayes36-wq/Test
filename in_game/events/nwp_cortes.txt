@@ -45,10 +45,15 @@
 #   outcome = neutral        EAudioEventOutcome takes positive, negative or
 #                            neutral; good, bad, none and default are not
 #
+#   change_location_owner    CONFIRMED at runtime - Xamapan flipped owner
+#
+# RULED OUT:
+#   trigger_event            "Unknown effect" - the bare form is not valid
+#
 # STILL OPEN:
-#   nothing blocking. The hook is live. What remains untested is whether
-#   change_location_owner actually TRANSFERS ownership rather than merely
-#   existing - fire nwp.27 and look at the map.
+#   how to fire a VISIBLE event     - nwp.29 probes eight forms
+#   reaching the whole province     - nwp.28 probes the location -> province
+#                                     transition and four iterators
 # ================================================================
 
 
@@ -139,6 +144,78 @@ nwp.24 = {
 			error_log = "::NWPKEY::HIT region:mesoamerica_region (control - this one must hit)"
 		}
 		error_log = "::NWPKEY::probe complete"
+	}
+}
+
+
+# --------------------------------------------------------------------
+# nwp.28 - DEBUG. Can a province be reached from one of its locations?
+# Console: event nwp.28
+#
+# province: is not an addressable scope type, but the province exists - the
+# debug panel puts xamapan inside cuetlaxtlan_province (3544). If `province`
+# works as a scope transition off a location, the whole province is reachable
+# without ever naming it.
+#
+# The runtime line says whether the transition resolves. The dead branch
+# below is load-time only: unknown iterators are reported at launch, so the
+# one that draws no complaint is the real name.
+# --------------------------------------------------------------------
+nwp.28 = {
+	type = country_event
+	title = hidden_event.t
+	hidden = yes
+	orphan = yes
+
+	immediate = {
+		location:xamapan ?= {
+			province ?= {
+				error_log = "::NWPKEY::HIT province scope from location:xamapan"
+			}
+		}
+
+		if = {
+			limit = { always = no }
+			location:xamapan ?= {
+				province ?= {
+					every_location_in_province = { error_log = "probe" }
+					every_province_location = { error_log = "probe" }
+					every_location = { error_log = "probe" }
+					every_owned_location = { error_log = "probe" }
+				}
+			}
+		}
+	}
+}
+
+
+# --------------------------------------------------------------------
+# nwp.29 - DEBUG. How do you fire a VISIBLE event?
+#
+# MEASURED: "Unknown effect trigger_event". Only trigger_event_silently is
+# known to work, and that suppresses the popup - which defeats the whole
+# point of giving the player a choice.
+#
+# Never fired. Load-time validation names the fakes.
+# --------------------------------------------------------------------
+nwp.29 = {
+	type = country_event
+	title = hidden_event.t
+	hidden = yes
+	orphan = yes
+
+	immediate = {
+		if = {
+			limit = { always = no }
+			trigger_event = { id = nwp.20 }
+			fire_event = nwp.20
+			show_event = nwp.20
+			trigger_event_with_popup = nwp.20
+			trigger_event_visible = nwp.20
+			send_event = nwp.20
+			country_event = nwp.20
+			trigger_event_shown = nwp.20
+		}
 	}
 }
 
