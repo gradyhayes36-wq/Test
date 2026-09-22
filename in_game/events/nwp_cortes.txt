@@ -1,116 +1,5 @@
 ﻿namespace = nwp
 
-# The Cortes expedition.
-#
-# WHY THIS EXISTS: in a 12-hour unsteered observer run the AI never took a
-# single Mesoamerican location. Nothing in the submod is eligible to fire in a
-# region no Old World power has reached, so the whole collapse model sat idle
-# over the one region it was built for. EU5's Conquistador mechanic would
-# normally cover this; M&T has it disabled.
-#
-# This forces the historical foothold - Veracruz, 1519, launched from the
-# Caribbean - and lets the existing machinery take it from there. It is
-# deliberately the SMALLEST possible intervention: one location, once. Nothing
-# here conquers Mexico. It gives the beachhead and leaves the rest to the AI,
-# the diseases and the region-contact sweep.
-#
-# SPONSOR: whoever owns Sevilla, not a hardcoded Spain. Historically the same
-# thing - the Indies trade was run from Seville under the Casa de
-# Contratacion, and Cortes sailed on Castilian authority - but it degrades
-# into alternate history gracefully. If Morocco retakes Andalusia before the
-# expedition launches, Morocco gets Veracruz. It also dodges the question of
-# whether Spain exists as a tag yet at this date.
-#
-# Player-agnostic either way: it fires the same whoever the human is playing,
-# including observer mode.
-#
-# ======================= ALL CONFIRMED IN GAME =======================
-# location:sevilla + owner      the sponsor resolves
-# location:<key>                addressable; province: and area: are not
-#                               (area: is, province: is not)
-# change_location_owner         transfers ownership - verified on the map
-# option = { } + outcome = neutral   events need both; outcome is a scalar
-#                               EAudioEventOutcome, taking positive,
-#                               negative or neutral
-# trigger_event_silently        the ONLY firing effect in this engine. It
-#                               suppresses the notification, NOT the popup -
-#                               nwp.20 renders in full with both options.
-#                               Whether an event shows is decided by
-#                               `hidden` on the event itself.
-# cuetlaxtlan_province          cuetlaxtlan xamapan nopiloa teutila puctlan
-#                               otatitlan - granted individually
-#
-# Verified end to end: the grant fires, contacted goes 0 -> 325 on the next
-# monthly tick, and meso_pop turns over immediately.
-#
-# Kept for testing: nwp.27 forces the expedition from the console without
-# waiting for 1510.
-#
-# OPEN: the grant does not create a colonial subject - the sponsor simply
-# owns six Mesoamerican locations. nwp.30 probes thirteen candidate
-# colonization effects across both plausible scopes.
-# =====================================================================
-
-
-# --------------------------------------------------------------------
-# nwp.30 - DEBUG. What is the script name for colonising a location?
-#
-# `colonize_and_finish` is a CONSOLE command, not necessarily a script
-# effect, so the name has to be found the same way the others were. Never
-# fired; unknown effects are named at load.
-#
-# Candidates are tried in both country scope and location scope, because an
-# effect valid in one may not be valid in the other and the error lines will
-# say which.
-# --------------------------------------------------------------------
-nwp.30 = {
-	type = country_event
-	title = hidden_event.t
-	hidden = yes
-	orphan = yes
-
-	immediate = {
-		# Country scope
-		if = {
-			limit = { always = no }
-			colonize_and_finish = location:xamapan
-			colonize = location:xamapan
-			create_colony = location:xamapan
-			create_colonial_nation = location:xamapan
-			form_colonial_nation = location:xamapan
-			create_subject = location:xamapan
-			colonize_location = location:xamapan
-			release_colonial_nation = location:xamapan
-			create_colonial_charter = location:xamapan
-			grant_colonial_charter = location:xamapan
-			add_colonial_charter = location:xamapan
-			start_colonial_charter = location:xamapan
-			create_dominion = location:xamapan
-			create_vassal = location:xamapan
-			create_colonial_subject = location:xamapan
-			spawn_colonial_nation = location:xamapan
-		}
-
-		# Location scope
-		if = {
-			limit = { always = no }
-			location:xamapan ?= {
-				colonize_and_finish = root
-				colonize = root
-				finish_colonization = yes
-				start_colonization = root
-				set_colony = root
-				create_colony = root
-				set_colonial = yes
-				set_settlement = root
-				add_settlers = root
-				set_colonial_nation = root
-				create_colonial_nation = root
-			}
-		}
-	}
-}
-
 
 # --------------------------------------------------------------------
 # nwp.30 - DEBUG. Is there a scripted effect that colonizes a location?
@@ -125,6 +14,22 @@ nwp.30 = {
 # complaint is real. Two branches because the scope is unknown - some of
 # these would sit on the country, some on the location.
 # --------------------------------------------------------------------
+# nwp.30 - DEBUG. What argument does create_colonial_charter take?
+#
+# MEASURED: of 27 candidates, 26 were "Unknown effect". The exception was
+# create_colonial_charter, which instead gave
+#
+#   PostValidate of effect 'create_colonial_charter' returned false
+#
+# That is a real effect rejecting a bad argument, not a missing one. So the
+# name is right and the shape is wrong - `= location:xamapan` is not what it
+# wants. M&T's common/generic_actions/colonial_charters.txt is presumably
+# what defines the charters themselves.
+#
+# Same trick, one level down: each form below gets its own line, and
+# PostValidate names the ones it rejects. Whichever draws no complaint is the
+# correct shape.
+# --------------------------------------------------------------------
 nwp.30 = {
 	type = country_event
 	title = hidden_event.t
@@ -132,28 +37,34 @@ nwp.30 = {
 	orphan = yes
 
 	immediate = {
-		# Country scope
 		if = {
 			limit = { always = no }
-			colonize_and_finish = location:xamapan
-			colonize = location:xamapan
-			create_colony = location:xamapan
-			create_colonial_nation = location:xamapan
-			form_colonial_nation = location:xamapan
-			create_subject = location:xamapan
-			colonize_location = location:xamapan
+
+			# Country scope, scalar forms
+			create_colonial_charter = yes
+			create_colonial_charter = root
+			create_colonial_charter = region:mesoamerica_region
+
+			# Country scope, block forms
+			create_colonial_charter = { location = location:xamapan }
+			create_colonial_charter = { target = location:xamapan }
+			create_colonial_charter = { province = location:xamapan }
+			create_colonial_charter = { region = region:mesoamerica_region }
+			create_colonial_charter = { area = area:tochtepec_area }
+			create_colonial_charter = { country = root }
+			create_colonial_charter = { owner = root }
+			create_colonial_charter = { charter = colonial_charter }
+			create_colonial_charter = { type = colonial_charter }
 		}
 
 		# Location scope
 		if = {
 			limit = { always = no }
 			location:xamapan ?= {
-				colonize_and_finish = root
-				colonize = root
-				finish_colonization = yes
-				start_colonization = root
-				set_colony = root
-				create_colony = root
+				create_colonial_charter = yes
+				create_colonial_charter = root
+				create_colonial_charter = { country = root }
+				create_colonial_charter = { owner = root }
 			}
 		}
 	}
