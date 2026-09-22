@@ -30,6 +30,26 @@
 # PostValidate names the ones it rejects. Whichever draws no complaint is the
 # correct shape.
 # --------------------------------------------------------------------
+# nwp.30 - DEBUG. How do you write a province_definition?
+#
+# MEASURED, in three narrowing passes:
+#   - 26 of 27 colonization candidates were "Unknown effect";
+#     create_colonial_charter was the exception
+#   - of its parameters, only `target` is real. location, province, region,
+#     area, country, owner, charter and type all gave "Failed to read"
+#   - it is COUNTRY scope only - the location-scope variants gave
+#     "Inconsistent effect scopes (location vs. country)"
+#   - and the decisive line:
+#
+#       create_colonial_charter effect
+#       [ target: scope type location, expected province_definition ]
+#
+# So the shape is create_colonial_charter = { target = <province_definition> }
+# and the only open question is how a province_definition is written. It is
+# evidently NOT a location, and `province:` is not an addressable scope, so
+# it is probably a bare database key or the numeric id - the debug panel
+# showed cuetlaxtlan_province (3544).
+# --------------------------------------------------------------------
 nwp.30 = {
 	type = country_event
 	title = hidden_event.t
@@ -39,33 +59,11 @@ nwp.30 = {
 	immediate = {
 		if = {
 			limit = { always = no }
-
-			# Country scope, scalar forms
-			create_colonial_charter = yes
-			create_colonial_charter = root
-			create_colonial_charter = region:mesoamerica_region
-
-			# Country scope, block forms
-			create_colonial_charter = { location = location:xamapan }
-			create_colonial_charter = { target = location:xamapan }
-			create_colonial_charter = { province = location:xamapan }
-			create_colonial_charter = { region = region:mesoamerica_region }
-			create_colonial_charter = { area = area:tochtepec_area }
-			create_colonial_charter = { country = root }
-			create_colonial_charter = { owner = root }
-			create_colonial_charter = { charter = colonial_charter }
-			create_colonial_charter = { type = colonial_charter }
-		}
-
-		# Location scope
-		if = {
-			limit = { always = no }
-			location:xamapan ?= {
-				create_colonial_charter = yes
-				create_colonial_charter = root
-				create_colonial_charter = { country = root }
-				create_colonial_charter = { owner = root }
-			}
+			create_colonial_charter = { target = cuetlaxtlan_province }
+			create_colonial_charter = { target = 3544 }
+			create_colonial_charter = { target = province_definition:cuetlaxtlan_province }
+			create_colonial_charter = { target = province:cuetlaxtlan_province }
+			create_colonial_charter = { target = province_definition:3544 }
 		}
 	}
 }
