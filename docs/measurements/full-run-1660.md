@@ -3,16 +3,21 @@
 Setup: fresh 1488 start, no forced seed. Spain given one Caribbean colony, then
 one conquered Mesoamerican location in the early 1500s.
 
-**This run is a hybrid, not a single build.** 1488-1565 ran on the pre-`5caacee`
-build: spawn gated on `owner_from_old_world` (so no disease at all) and
-`labour_regime` population growth at -0.012. From 1565 it continues on
-`5caacee`, which moved the spawn gate to `has_variable = nwp_contacted` and
-eased `labour_regime` to -0.009. Every spawn below is a consequence of that
-change - the previous build produced zero in 77 years.
+**Correction: this is a single build, not a hybrid.** An earlier version of
+this file called it a hybrid across `5caacee`. It is not - the run is entirely
+on the pre-`5caacee` system: spawn gated on `owner_from_old_world`,
+`labour_regime` population growth at -0.012.
 
-So the 1600 figure is: a century of collapse driven by labour regime at -0.012
-with no disease, followed by 35 years of a weaker labour regime with the disease
-live. A clean single-build run from 1488 has not been done yet.
+The evidence is the absence of `::NWPROLL::`. That diagnostic was added in
+`b87c498` and prints on *every* successful spawn roll, before the eligibility
+check. This log has nine `::NWPSPAWN::` lines and zero `::NWPROLL::`, which is
+impossible on any build from `b87c498` onward. So the game ran `df92b48` or
+earlier, and `5caacee` is not in it.
+
+That also revises the 1565 conclusion. Ownership gating did not prevent
+spawning outright - it delayed it. The first natural spawn lands in **1569**,
+81 years in, once Spain owns enough of Mesoamerica for the limit to find a
+location. Nine spawns follow between 1569 and 1658.
 
 ## Headline
 
