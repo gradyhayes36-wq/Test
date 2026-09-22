@@ -34,7 +34,23 @@ cocoliztli = {
 	spawn = {
 		random_ownable_location = {
 			limit = {
-				population > 1
+				# MEASURED: density decides whether cocoliztli establishes at
+				# all. Seeded at value = 1 into a 2.4k-pop Caribbean location it
+				# reached 1 location and died in three years; seeded at the same
+				# strength into Mesoamerica (~36k per location) it reached 243 of
+				# 325 and took 31% of the region in ten months. A 15x density
+				# difference produced a 243x difference in spread.
+				#
+				# Every natural spawn had been landing in thin colonial outposts,
+				# because eligibility requires European contact and early
+				# contact means the Caribbean (~1.4k per location) and the East
+				# Coast (~2.8k).
+				#
+				# 10k is above every colonial frontier average and below the
+				# dense agrarian cores - Colombia 14.5k, Andes 22k, Mesoamerica
+				# 36.2k. Historically exact: cocoliztli was a disease of the
+				# Mesoamerican population core, not of Caribbean plantations.
+				population > 10	# was > 1
 				continent = continent:america
 
 				# Densely settled, agrarian Mesoamerica and the Andes took the
