@@ -404,29 +404,76 @@ it. The submod has to reverse an accelerating curve, not arrest a flat one.
 
 ---
 
-## `population` is raw pops, not thousands
+## `population` is in THOUSANDS
 
-The density gate added after the Caribbean/Mesoamerica comparison was written
-as `population > 10` with the intent of ten thousand. It filtered nothing.
-
-The unit is settled by two numbers already measured:
+Settled by measurement, after one wrong turn.
 
 | Source | Reading |
 |---|---|
-| `nwp.5` seed log, a value read of `population` | `pop=2392` |
-| `nwp.9` census, Caribbean region | 149.102k over 111 locations |
+| `nwp.5` seed log, a value read of `population` | `pop=2.39217` |
+| `nwp.9` census, Caribbean region, same run | `152.39117` over 111 locations |
 
-149.102k across 111 locations averages 1,343. A seed location at 2,392 is an
-ordinary above-average Caribbean location **in raw pops**. If the value read
-were in thousands it would mean 2.392M in a single location inside a region
-holding 149k in total, which is impossible. So value reads return raw pops,
-and there is no reason for a trigger comparison to resolve `population`
-through a different getter.
+One location at 2.39 against a regional 152.39 is 1.6% of the region — sensible
+for an above-average Caribbean location. Read as raw pops it would mean 2.39
+people in that location and 152 across the whole Caribbean, which the census
+labels in thousands. So `population` is in thousands, everywhere.
 
-The gate is therefore `population > 10000`, and the location that fizzled
-(2,392) now sits correctly below it while the Mesoamerican average (36,210)
-sits well above.
+Consequence: `population > 10` is a **ten thousand pop** gate, which is what was
+intended. A `population > 10000` gate, briefly pushed on the mistaken reading,
+means ten million pops in a single location — no location in the game has that,
+so it silently disabled natural spawning entirely. Reverted.
 
-This was caught before the Mesoamerica control run, so no measurement is
-invalidated by it — but every run made against the `> 10` gate was running an
-unfiltered spawn.
+The error came from reading a summarised "2,392" as the literal log token. The
+log prints `2.39217`. Read the raw log line, not a restatement of it.
+
+---
+
+## Caribbean seed, second draw: the density hypothesis is dead
+
+Same event (`nwp.5`), same region, essentially the same seed density as the
+first Caribbean arm — and the opposite outcome.
+
+| | First Caribbean arm | This run |
+|---|---|---|
+| Seed density | ~2.4k | 2.39k |
+| Peak locations infected | 1 | **42** |
+| Duration | died in 3 years | one sharp wave, ~8 months |
+
+Mesoamerican trajectory, from the 1488 baseline:
+
+| Date | Mesoamerica | Infected locations |
+|---|---|---|
+| 1489, pre-wave peak | 11,801.94k | 0 |
+| 1489 | 11,780.19k | 29 |
+| 1489 | 11,436.18k | **42** |
+| 1489 | 11,066.23k | 36 |
+| 1489, year end | 10,814.03k | 26 |
+| 1490, trough | **10,767.74k** | 0 |
+| 1502 | 11,080.86k | 0 |
+
+**−1,034.2k in roughly eight months — 8.76% of Mesoamerica from a single
+2.39k-pop Caribbean seed.** The disease works. It crossed from the Caribbean
+into the Mesoamerican core unaided and took nearly nine percent of the region
+in under a year.
+
+Two conclusions follow:
+
+1. **Density was never the discriminator.** The hypothesis rested on n=1 versus
+   n=1 across two different saves. A second draw at the same density produced a
+   42-location epidemic. The difference between the arms was stochastic — r0 is
+   `{3 6}`/`{5 10}`/`{10 15}` and the seed location is picked at random. The
+   remaining plausible fix from that commit is the spawn strength change
+   (`value = 0.75` → `1`), which was made at the same time and never isolated.
+
+2. **The suppression machinery never engaged.** `agri_collapse` stayed at 0
+   through the entire wave while 42 locations were infected. This is the region
+   gating working as designed, not a bug: the colony was in the Caribbean, so
+   only Caribbean locations carried `nwp_contacted`. Mesoamerica was ineligible
+   for stamping. Hemisphere-wide at 1502: `agri_collapse=17`,
+   `labour_regime=455`, `virgin_soil=4367`.
+
+And that is why the population bounced. With nothing suppressing recovery,
+Mesoamerica regrew from the 10,767.74k trough to 11,080.86k by 1502 — **+0.24%/yr,
+still 6.1% below the 1489 peak after twelve years**. The epidemic alone is a
+notch, not a collapse. The collapse depends entirely on the stamping following
+the disease into the region it hit.

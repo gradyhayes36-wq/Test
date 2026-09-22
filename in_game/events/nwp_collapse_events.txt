@@ -265,10 +265,10 @@ nwp.7 = {
 		# Matched control for nwp.5. Same spawn strength, same event shape,
 		# same logging - the ONLY difference is the density of the seed
 		# location. nwp.5 landed in a 2392-pop Caribbean location; this one
-		# is held above 10k so it lands in the agrarian core.
+		# is held above 10 (ten thousand pops) so it lands in the agrarian core.
 		region:mesoamerica_region = {
 			random_ownable_location_in_region = {
-				limit = { population > 10000 }
+				limit = { population > 10 }
 				spawn_disease = {
 					disease = disease:cocoliztli
 					value = 1
