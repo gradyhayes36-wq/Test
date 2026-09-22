@@ -24,19 +24,24 @@
 # Player-agnostic either way: it fires the same whoever the human is playing,
 # including observer mode.
 #
-# ============================ UNVERIFIED ============================
-# Four tokens below could not be checked against the repo's vanilla reference
-# files, which contain only modifier definitions and situations:
+# ============================ STATUS ============================
+# CONFIRMED by probe:
+#   location:sevilla         valid, and `owner` resolves off it
+#   every_owned_location     valid in country scope (reported 244)
+#   location:xamapan         valid  - this is Veracruz
+#   area:tochtepec_area      valid
+#   region:mesoamerica_region valid (control)
+#   outcome = { }            EU5 calls event choices outcomes, not options
 #
-#   1. set_owner              - the ownership-transfer effect name
-#   2. location:sevilla       - Seville's location key
-#   3. owner                  - location -> country scope transition
-#   4. cuetlaxtlan_province   - province key, and whether it scopes as
-#                               province: or location:
+# RULED OUT by probe:
+#   province:                NOT an addressable scope type, despite
+#                            cuetlaxtlan_province being a real province key
+#   set_owner                not an effect - "Unknown effect set_owner"
 #
-# The three probes below settle all four from the console before any of this
-# is wired into the monthly sweep. Do not enable nwp.20 until they pass.
-# ====================================================================
+# STILL OPEN:
+#   the real ownership-transfer effect  - nwp.25 probes ten candidates
+#   subject handling on the trigger     - see the hook note at the bottom
+# ================================================================
 
 
 # --------------------------------------------------------------------
@@ -131,46 +136,39 @@ nwp.24 = {
 
 
 # --------------------------------------------------------------------
-# nwp.21 - DEBUG. Grant Veracruz to Sevilla's owner, key read as a PROVINCE.
-# Console: event nwp.21
+# nwp.25 - DEBUG. Which ownership-transfer effect actually exists?
+#
+# MEASURED: `Unknown effect set_owner` at four sites. The effect name is
+# wrong, and that is the last real blocker.
+#
+# This event is never fired and grants nothing. Unknown effects are reported
+# AT LOAD with file and line, so simply loading the mod names every candidate
+# below that does not exist. Whichever ones are NOT listed in error.log are
+# real, and we pick from those.
+#
+# Read the log right after launch, before touching the console.
 # --------------------------------------------------------------------
-nwp.21 = {
+nwp.25 = {
 	type = country_event
 	title = hidden_event.t
 	hidden = yes
 	orphan = yes
 
 	immediate = {
-		location:sevilla ?= {
-			owner ?= { save_scope_as = cortes_sponsor }
-		}
-		province:cuetlaxtlan_province ?= {
-			every_location_in_province = {
-				set_owner = scope:cortes_sponsor
+		if = {
+			limit = { always = no }
+			location:xamapan ?= {
+				set_location_owner = root
+				change_owner = root
+				set_owner_and_controller = root
+				transfer_location = root
+				cede_location = root
+				set_country_owner = root
+				add_owned_location = root
+				set_controller = root
+				become_owned_by = root
+				change_location_owner = root
 			}
-			error_log = "::NWPCORTES::[GetCurrentYear]:DEBUG province-scope grant attempted"
-		}
-	}
-}
-
-
-# --------------------------------------------------------------------
-# nwp.22 - DEBUG. Same, key read as a LOCATION.
-# Console: event nwp.22
-# --------------------------------------------------------------------
-nwp.22 = {
-	type = country_event
-	title = hidden_event.t
-	hidden = yes
-	orphan = yes
-
-	immediate = {
-		location:sevilla ?= {
-			owner ?= { save_scope_as = cortes_sponsor }
-		}
-		location:cuetlaxtlan_province ?= {
-			set_owner = scope:cortes_sponsor
-			error_log = "::NWPCORTES::[GetCurrentYear]:DEBUG location-scope grant attempted"
 		}
 	}
 }
@@ -208,46 +206,27 @@ nwp.20 = {
 	desc = nwp.20.d
 	orphan = yes
 
-	option = {
+	# MEASURED: "Event #nwp.20 is missing an outcome". EU5 calls these
+	# outcomes, not options. Affirmative first so it is the player's default.
+	outcome = {
 		name = nwp.20.a
-		# EU5 has a game rule that makes the AI always take the option tagged
-		# historical. The token for that tag could not be verified from this
-		# repo, so it is commented rather than guessed - an unknown token
-		# inside an option is a load-time parse error, and this file already
-		# carries enough unverified surface.
-		#
-		# To find the real name, grep the base game's events for it:
-		#   Select-String -Path "<EU5 game folder>\game\events\*.txt" -Pattern 'historical'
-		# Then uncomment and correct the line below.
-		#
-		# historical = yes
-		#
-		# ai_chance stays regardless. With no option tagged historical the
-		# engine falls back to it, so 100:0 produces the same behaviour the
-		# historical rule would - the AI always sails. The only way the
-		# expedition does not happen is a human player declining it, which is
-		# the "history, with player intervention" model rather than random
-		# alternate history every run.
 		ai_chance = { factor = 100 }
 
-		# Province first - that is the whole Veracruz foothold, and what was
-		# actually asked for. Falls back to the single location if `province:`
-		# turns out not to be an addressable scope type. Both are ?= guarded,
-		# so whichever is unavailable no-ops and the other still lands a
-		# beachhead. Keys confirmed from the in-game debug panel.
-		province:cuetlaxtlan_province ?= {
-			every_location_in_province = {
-				set_owner = root
-			}
-			error_log = "::NWPCORTES::[GetCurrentYear]:expedition accepted, Cuetlaxtlan province granted"
-		}
+		# MEASURED: province: is NOT an addressable scope type. nwp.24 hit
+		# location:xamapan, area:tochtepec_area and region:mesoamerica_region
+		# but not province:cuetlaxtlan_province, so the province branch is
+		# gone and the grant targets the location directly.
 		location:xamapan ?= {
-			set_owner = root
-			error_log = "::NWPCORTES::[GetCurrentYear]:expedition accepted, Xamapan granted"
+			# PLACEHOLDER - set_owner does not exist. Replace with whichever
+			# candidate in nwp.25 survives the load check, then delete nwp.25.
+			# Left commented so the file loads clean in the meantime.
+			#
+			# <OWNERSHIP_EFFECT> = root
+			error_log = "::NWPCORTES::[GetCurrentYear]:expedition accepted, Xamapan grant attempted"
 		}
 	}
 
-	option = {
+	outcome = {
 		name = nwp.20.b
 		ai_chance = { factor = 0 }
 
@@ -257,29 +236,47 @@ nwp.20 = {
 
 
 # --------------------------------------------------------------------
-# The hook, for the Situation's on_monthly once the probes pass:
+# The hook, for the Situation's on_monthly once nwp.25 reports:
 #
 #	if = {
 #		limit = {
 #			NOT = { has_global_variable = nwp_cortes_done }
 #			current_date > 1510.1.1
-#			location:sevilla ?= {
-#				owner ?= {
-#					any_owned_location = { continent = continent:america }
-#				}
-#			}
 #		}
 #		set_global_variable = nwp_cortes_done
-#		location:sevilla.owner = { trigger_event = { id = nwp.20 } }
+#		location:sevilla.owner ?= { trigger_event = { id = nwp.20 } }
 #	}
 #
-# trigger_event, NOT trigger_event_silently - the silent form is what nwp.1
-# uses and it would suppress the popup, handing the player's choice to the
-# engine without asking.
+# NOTE THE MISSING CONDITION. The plan was to require Sevilla's owner to hold
+# an American location. That does not work, and the probe shows why:
 #
-# The date gate keeps it near 1519 rather than firing the moment Columbus
-# lands. The global variable is set BEFORE firing, so it cannot re-ask while
-# the player has the popup open. The sponsor is re-resolved at firing time, so
-# a conquest of Andalusia in 1515 redirects the expedition; one in 1530 does
-# not, which is the right way round.
+#	total_locations=244 : new_world_locations=0
+#
+# 244 locations is a major Iberian power, so the sponsor resolves correctly -
+# but it holds zero American locations in a game where the Situation had
+# already started, which proves some Old World power owns a populated
+# American location. The colony belongs to a SUBJECT, not the parent.
+#
+# Which means the original instinct - "when Spain has a subject in the New
+# World" - was right, and requiring direct ownership would have produced an
+# event that silently never fires. Exactly the failure this submod keeps
+# hitting.
+#
+# Rather than guess a subject-iterator token, the condition is dropped
+# entirely. This hook lives inside the Situation's on_monthly, and the
+# Situation cannot be running unless an Old World power already owns a
+# populated American location - its can_start says so. So "Europe has
+# arrived" is already guaranteed by the fact that this code is executing.
+#
+# Tradeoff: if Portugal colonises and Castile does not, Castile still gets
+# Veracruz. Slightly odd, and preferable to never firing. A subject-aware
+# version can tighten it later once the iterator token is known.
+#
+# trigger_event, NOT trigger_event_silently - the silent form would suppress
+# the popup and take the player's choice away.
+#
+# The date gate keeps it near 1519. The global variable is set BEFORE firing
+# so it cannot re-ask while the popup is open. The sponsor is resolved at
+# firing time, so a conquest of Andalusia in 1515 redirects the expedition;
+# one in 1530 does not.
 # --------------------------------------------------------------------
