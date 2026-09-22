@@ -70,27 +70,42 @@ nwp.30 = {
 	orphan = yes
 
 	immediate = {
+		# Country scope
 		if = {
 			limit = { always = no }
-
-			# Country scope, location as the argument.
-			colonize = location:xamapan
-			colonize_location = location:xamapan
 			colonize_and_finish = location:xamapan
+			colonize = location:xamapan
 			create_colony = location:xamapan
-			start_colonization = location:xamapan
-			finish_colonization = location:xamapan
-			add_colony = location:xamapan
+			create_colonial_nation = location:xamapan
+			form_colonial_nation = location:xamapan
+			create_subject = location:xamapan
+			colonize_location = location:xamapan
+			release_colonial_nation = location:xamapan
+			create_colonial_charter = location:xamapan
+			grant_colonial_charter = location:xamapan
+			add_colonial_charter = location:xamapan
+			start_colonial_charter = location:xamapan
+			create_dominion = location:xamapan
+			create_vassal = location:xamapan
+			create_colonial_subject = location:xamapan
+			spawn_colonial_nation = location:xamapan
+		}
 
-			# Location scope, country as the argument.
+		# Location scope
+		if = {
+			limit = { always = no }
 			location:xamapan ?= {
-				colonize = root
-				colonize_location = root
 				colonize_and_finish = root
-				create_colony = root
+				colonize = root
+				finish_colonization = yes
 				start_colonization = root
-				finish_colonization = root
-				set_colonial_owner = root
+				set_colony = root
+				create_colony = root
+				set_colonial = yes
+				set_settlement = root
+				add_settlers = root
+				set_colonial_nation = root
+				create_colonial_nation = root
 			}
 		}
 	}
