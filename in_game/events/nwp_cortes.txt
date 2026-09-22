@@ -171,6 +171,35 @@ nwp.26 = {
 
 
 # --------------------------------------------------------------------
+# nwp.27 - DEBUG. Does change_location_owner actually work at runtime?
+# Console: event nwp.27
+#
+# Passing the load check only proves the effect EXISTS. This proves it does
+# the thing. Hidden with no options, so it needs no outcome enum and is
+# testable while that question is still open - otherwise the grant could not
+# be tested until the enum is known, and both would need another launch.
+#
+# Grants Xamapan to whoever owns Sevilla. Run it on a throwaway save.
+# --------------------------------------------------------------------
+nwp.27 = {
+	type = country_event
+	title = hidden_event.t
+	hidden = yes
+	orphan = yes
+
+	immediate = {
+		location:sevilla ?= {
+			owner ?= { save_scope_as = cortes_sponsor }
+		}
+		location:xamapan ?= {
+			change_location_owner = scope:cortes_sponsor
+			error_log = "::NWPCORTES::[GetCurrentYear]:DEBUG change_location_owner executed on Xamapan"
+		}
+	}
+}
+
+
+# --------------------------------------------------------------------
 # nwp.20 - the Cortes expedition. VISIBLE, with a choice.
 #
 # NOT HOOKED UP YET - the probes above must confirm the grant first. It is
