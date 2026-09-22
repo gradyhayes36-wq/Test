@@ -50,7 +50,12 @@ cocoliztli = {
 				# dense agrarian cores - Colombia 14.5k, Andes 22k, Mesoamerica
 				# 36.2k. Historically exact: cocoliztli was a disease of the
 				# Mesoamerican population core, not of Caribbean plantations.
-				population > 10	# was > 1
+				# UNITS: a value read of `population` returned 2392 for the
+				# seeded Caribbean location, against a regional total of
+				# 149.102k over 111 locations. So `population` is RAW POPS,
+				# not thousands, and the first version of this gate - written
+				# as `> 10` for an intended ten thousand - filtered nothing.
+				population > 10000	# was > 1, then briefly > 10
 				continent = continent:america
 
 				# Densely settled, agrarian Mesoamerica and the Andes took the

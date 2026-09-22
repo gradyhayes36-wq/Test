@@ -1,4 +1,4 @@
-# Baseline measurement, 1676
+﻿# Baseline measurement, 1676
 
 First real data from the game, via `event nwp.9` on a live M&T 0.2.9 save.
 Raw output: `census-1676.txt` (region : population in thousands).
@@ -401,3 +401,32 @@ With the corrected baseline the requirement is −1.21% to −2.18%/yr rather th
 looked. But note what the levers must now overcome: not a static population but
 a **+0.277%/yr post-contact trend** and a capacity rising 0.12%/yr underneath
 it. The submod has to reverse an accelerating curve, not arrest a flat one.
+
+---
+
+## `population` is raw pops, not thousands
+
+The density gate added after the Caribbean/Mesoamerica comparison was written
+as `population > 10` with the intent of ten thousand. It filtered nothing.
+
+The unit is settled by two numbers already measured:
+
+| Source | Reading |
+|---|---|
+| `nwp.5` seed log, a value read of `population` | `pop=2392` |
+| `nwp.9` census, Caribbean region | 149.102k over 111 locations |
+
+149.102k across 111 locations averages 1,343. A seed location at 2,392 is an
+ordinary above-average Caribbean location **in raw pops**. If the value read
+were in thousands it would mean 2.392M in a single location inside a region
+holding 149k in total, which is impossible. So value reads return raw pops,
+and there is no reason for a trigger comparison to resolve `population`
+through a different getter.
+
+The gate is therefore `population > 10000`, and the location that fizzled
+(2,392) now sits correctly below it while the Mesoamerican average (36,210)
+sits well above.
+
+This was caught before the Mesoamerica control run, so no measurement is
+invalidated by it — but every run made against the `> 10` gate was running an
+unfiltered spawn.

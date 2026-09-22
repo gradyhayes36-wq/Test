@@ -262,14 +262,20 @@ nwp.7 = {
 	orphan = yes
 
 	immediate = {
+		# Matched control for nwp.5. Same spawn strength, same event shape,
+		# same logging - the ONLY difference is the density of the seed
+		# location. nwp.5 landed in a 2392-pop Caribbean location; this one
+		# is held above 10k so it lands in the agrarian core.
 		region:mesoamerica_region = {
 			random_ownable_location_in_region = {
-				limit = { population > 1 }
+				limit = { population > 10000 }
 				spawn_disease = {
 					disease = disease:cocoliztli
 					value = 1
 				}
-				error_log = "::NWPLOG::[GetCurrentYear]:DEBUG force-spawned cocoliztli in Mesoamerica"
+				set_local_variable = { name = nwp_dbg_pop value = population }
+				error_log = "::NWPSPAWN::DEBUG seeded Mesoamerica:pop=[SCOPE.GetLocalVariable('nwp_dbg_pop').GetValue]"
+				remove_local_variable = nwp_dbg_pop
 			}
 		}
 	}
