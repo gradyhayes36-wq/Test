@@ -1,0 +1,96 @@
+﻿namespace = nwp
+
+# The Cortes expedition.
+#
+# WHY THIS EXISTS: in a 12-hour unsteered observer run the AI never took a
+# single Mesoamerican location. Nothing in the submod is eligible to fire in a
+# region no Old World power has reached, so the whole collapse model sat idle
+# over the one region it was built for. EU5's Conquistador mechanic would
+# normally cover this; M&T has it disabled.
+#
+# This forces the historical foothold - Veracruz, 1519, launched from the
+# Caribbean - and lets the existing machinery take it from there. It is
+# deliberately the SMALLEST possible intervention: one location, once. Nothing
+# here conquers Mexico. It gives Spain the beachhead and leaves the rest to
+# the AI, the diseases and the region-contact sweep.
+#
+# It is tag-driven on Spain but player-agnostic: it fires the same whoever the
+# human is playing, including observer mode.
+#
+# ============================ UNVERIFIED ============================
+# Three tokens below could not be checked against the repo's vanilla
+# reference files, which contain only modifier definitions and situations:
+#
+#   1. set_owner              - the ownership-transfer effect name
+#   2. c:SPA                  - Spain's tag (may be CAS/Castile at this date)
+#   3. cuetlaxtlan_province   - province key, and whether it scopes as
+#                               province: or location:
+#
+# nwp.21 and nwp.22 exist to settle all three from the console before any of
+# this is wired into the monthly sweep. Do not enable nwp.20 until one of them
+# is confirmed working.
+# ====================================================================
+
+
+# --------------------------------------------------------------------
+# nwp.21 - DEBUG. Grant Veracruz to Spain, treating the key as a PROVINCE.
+# Console: event nwp.21
+# --------------------------------------------------------------------
+nwp.21 = {
+	type = country_event
+	title = hidden_event.t
+	hidden = yes
+	orphan = yes
+
+	immediate = {
+		province:cuetlaxtlan_province ?= {
+			every_location_in_province = {
+				set_owner = c:SPA
+			}
+			error_log = "::NWPCORTES::[GetCurrentYear]:DEBUG province-scope grant attempted"
+		}
+	}
+}
+
+
+# --------------------------------------------------------------------
+# nwp.22 - DEBUG. Same, treating the key as a LOCATION.
+# Console: event nwp.22
+# --------------------------------------------------------------------
+nwp.22 = {
+	type = country_event
+	title = hidden_event.t
+	hidden = yes
+	orphan = yes
+
+	immediate = {
+		location:cuetlaxtlan_province ?= {
+			set_owner = c:SPA
+			error_log = "::NWPCORTES::[GetCurrentYear]:DEBUG location-scope grant attempted"
+		}
+	}
+}
+
+
+# --------------------------------------------------------------------
+# nwp.20 - the real thing. NOT HOOKED UP YET.
+#
+# Once nwp.21 or nwp.22 is confirmed, the working branch goes here and this
+# gets called from the Situation's on_monthly behind a global-variable guard:
+#
+#	if = {
+#		limit = {
+#			NOT = { has_global_variable = nwp_cortes_done }
+#			current_date > 1510.1.1
+#			continent:america = {
+#				any_location_in_continent = { owner = c:SPA }
+#			}
+#		}
+#		set_global_variable = nwp_cortes_done
+#		c:SPA = { trigger_event_silently = nwp.20 }
+#	}
+#
+# The date gate keeps it near 1519 rather than firing the moment Columbus
+# lands. The global variable makes it once-per-game. The any_location_in_
+# continent idiom is the one can_start already uses successfully.
+# --------------------------------------------------------------------
