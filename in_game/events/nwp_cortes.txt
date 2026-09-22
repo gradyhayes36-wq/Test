@@ -50,10 +50,13 @@
 # RULED OUT:
 #   trigger_event            "Unknown effect" - the bare form is not valid
 #
+#   cuetlaxtlan_province     composition read from the game files:
+#                            cuetlaxtlan xamapan nopiloa teutila puctlan
+#                            otatitlan - all granted individually
+#
 # STILL OPEN:
-#   how to fire a VISIBLE event     - nwp.29 probes eight forms
-#   reaching the whole province     - nwp.28 probes the location -> province
-#                                     transition and four iterators
+#   how to fire a VISIBLE event     - nwp.29 probes eight forms. This is the
+#                                     only thing left between here and live.
 # ================================================================
 
 
@@ -149,47 +152,6 @@ nwp.24 = {
 
 
 # --------------------------------------------------------------------
-# nwp.28 - DEBUG. Can a province be reached from one of its locations?
-# Console: event nwp.28
-#
-# province: is not an addressable scope type, but the province exists - the
-# debug panel puts xamapan inside cuetlaxtlan_province (3544). If `province`
-# works as a scope transition off a location, the whole province is reachable
-# without ever naming it.
-#
-# The runtime line says whether the transition resolves. The dead branch
-# below is load-time only: unknown iterators are reported at launch, so the
-# one that draws no complaint is the real name.
-# --------------------------------------------------------------------
-nwp.28 = {
-	type = country_event
-	title = hidden_event.t
-	hidden = yes
-	orphan = yes
-
-	immediate = {
-		location:xamapan ?= {
-			province ?= {
-				error_log = "::NWPKEY::HIT province scope from location:xamapan"
-			}
-		}
-
-		if = {
-			limit = { always = no }
-			location:xamapan ?= {
-				province ?= {
-					every_location_in_province = { error_log = "probe" }
-					every_province_location = { error_log = "probe" }
-					every_location = { error_log = "probe" }
-					every_owned_location = { error_log = "probe" }
-				}
-			}
-		}
-	}
-}
-
-
-# --------------------------------------------------------------------
 # nwp.29 - DEBUG. How do you fire a VISIBLE event?
 #
 # MEASURED: "Unknown effect trigger_event". Only trigger_event_silently is
@@ -241,10 +203,23 @@ nwp.27 = {
 		location:sevilla ?= {
 			owner ?= { save_scope_as = cortes_sponsor }
 		}
-		location:xamapan ?= {
-			change_location_owner = scope:cortes_sponsor
-			error_log = "::NWPCORTES::[GetCurrentYear]:DEBUG change_location_owner executed on Xamapan"
-		}
+		# cuetlaxtlan_province, from the game files:
+		#   cuetlaxtlan xamapan nopiloa teutila puctlan otatitlan
+		#
+		# Granted one location at a time rather than through the province.
+		# `province:` is not an addressable scope type, and while `province`
+		# might work as a transition off a location, `location:` is already
+		# proven and this needs no further probing. The cost is that the list
+		# is pinned to M&T's current province composition - if that changes,
+		# this list goes stale silently. Each is ?= guarded, so a renamed or
+		# removed location drops out rather than breaking the grant.
+		location:cuetlaxtlan ?= { change_location_owner = scope:cortes_sponsor }
+		location:xamapan ?= { change_location_owner = scope:cortes_sponsor }
+		location:nopiloa ?= { change_location_owner = scope:cortes_sponsor }
+		location:teutila ?= { change_location_owner = scope:cortes_sponsor }
+		location:puctlan ?= { change_location_owner = scope:cortes_sponsor }
+		location:otatitlan ?= { change_location_owner = scope:cortes_sponsor }
+		error_log = "::NWPCORTES::[GetCurrentYear]:DEBUG province grant executed"
 	}
 }
 
@@ -304,10 +279,23 @@ nwp.20 = {
 		#
 		# MEASURED: change_location_owner is the ownership effect. Nine other
 		# candidates were reported "Unknown effect" at load; this one was not.
-		location:xamapan ?= {
-			change_location_owner = root
-			error_log = "::NWPCORTES::[GetCurrentYear]:expedition accepted, Xamapan granted"
-		}
+		# cuetlaxtlan_province, from the game files:
+		#   cuetlaxtlan xamapan nopiloa teutila puctlan otatitlan
+		#
+		# Granted one location at a time rather than through the province.
+		# `province:` is not an addressable scope type, and while `province`
+		# might work as a transition off a location, `location:` is already
+		# proven and this needs no further probing. The cost is that the list
+		# is pinned to M&T's current province composition - if that changes,
+		# this list goes stale silently. Each is ?= guarded, so a renamed or
+		# removed location drops out rather than breaking the grant.
+		location:cuetlaxtlan ?= { change_location_owner = root }
+		location:xamapan ?= { change_location_owner = root }
+		location:nopiloa ?= { change_location_owner = root }
+		location:teutila ?= { change_location_owner = root }
+		location:puctlan ?= { change_location_owner = root }
+		location:otatitlan ?= { change_location_owner = root }
+		error_log = "::NWPCORTES::[GetCurrentYear]:expedition accepted, Cuetlaxtlan province granted"
 	}
 
 	option = {
