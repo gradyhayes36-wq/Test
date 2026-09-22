@@ -49,6 +49,51 @@
 
 
 # --------------------------------------------------------------------
+# nwp.30 - DEBUG. What is the script name for colonising a location?
+#
+# `colonize_and_finish` is a CONSOLE command, not necessarily a script
+# effect, so the name has to be found the same way the others were. Never
+# fired; unknown effects are named at load.
+#
+# Candidates are tried in both country scope and location scope, because an
+# effect valid in one may not be valid in the other and the error lines will
+# say which.
+# --------------------------------------------------------------------
+nwp.30 = {
+	type = country_event
+	title = hidden_event.t
+	hidden = yes
+	orphan = yes
+
+	immediate = {
+		if = {
+			limit = { always = no }
+
+			# Country scope, location as the argument.
+			colonize = location:xamapan
+			colonize_location = location:xamapan
+			colonize_and_finish = location:xamapan
+			create_colony = location:xamapan
+			start_colonization = location:xamapan
+			finish_colonization = location:xamapan
+			add_colony = location:xamapan
+
+			# Location scope, country as the argument.
+			location:xamapan ?= {
+				colonize = root
+				colonize_location = root
+				colonize_and_finish = root
+				create_colony = root
+				start_colonization = root
+				finish_colonization = root
+				set_colonial_owner = root
+			}
+		}
+	}
+}
+
+
+# --------------------------------------------------------------------
 # nwp.27 - DEBUG. Does change_location_owner actually work at runtime?
 # Console: event nwp.27
 #
