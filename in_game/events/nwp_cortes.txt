@@ -127,8 +127,8 @@ nwp.22 = {
 # and the localization resolves, without waiting on the trigger.
 #
 # Two options, affirmative listed first so it is the player's default. The AI
-# takes it at 95:5, so an observer run or an AI Castile follows history
-# essentially always while a human player keeps the veto.
+# takes it at 100:0, so an observer run or an AI Castile always follows
+# history while a human player keeps the veto.
 #
 # Declining sets the same done flag, so it asks once and then leaves you
 # alone. Be aware that declining means nothing gives Mesoamerica a European
@@ -153,7 +153,25 @@ nwp.20 = {
 
 	option = {
 		name = nwp.20.a
-		ai_chance = { factor = 95 }
+		# EU5 has a game rule that makes the AI always take the option tagged
+		# historical. The token for that tag could not be verified from this
+		# repo, so it is commented rather than guessed - an unknown token
+		# inside an option is a load-time parse error, and this file already
+		# carries enough unverified surface.
+		#
+		# To find the real name, grep the base game's events for it:
+		#   Select-String -Path "<EU5 game folder>\game\events\*.txt" -Pattern 'historical'
+		# Then uncomment and correct the line below.
+		#
+		# historical = yes
+		#
+		# ai_chance stays regardless. With no option tagged historical the
+		# engine falls back to it, so 100:0 produces the same behaviour the
+		# historical rule would - the AI always sails. The only way the
+		# expedition does not happen is a human player declining it, which is
+		# the "history, with player intervention" model rather than random
+		# alternate history every run.
+		ai_chance = { factor = 100 }
 
 		province:cuetlaxtlan_province ?= {
 			every_location_in_province = {
@@ -168,7 +186,7 @@ nwp.20 = {
 
 	option = {
 		name = nwp.20.b
-		ai_chance = { factor = 5 }
+		ai_chance = { factor = 0 }
 
 		error_log = "::NWPCORTES::[GetCurrentYear]:expedition declined"
 	}
