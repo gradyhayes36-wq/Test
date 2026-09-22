@@ -181,10 +181,26 @@ nwp_demographic_collapse = {
 					}
 				}
 			}
-			error_log = "::NWPTRACK::[GetCurrentYear]:meso_pop=[SCOPE.GetLocalVariable('nwp_trk_pop').GetValue]:cocoliztli_locs=[SCOPE.GetLocalVariable('nwp_trk_coc').GetValue]:agri_collapse=[SCOPE.GetLocalVariable('nwp_trk_ac').GetValue]"
+			# Has Europe actually reached Mesoamerica at all? In an observer
+			# run nobody steers the AI, so a whole game can pass without a
+			# European power taking a Mesoamerican location - and then none of
+			# the collapse machinery is even eligible to fire there. Without
+			# this counter a null result is indistinguishable from a broken
+			# submod. 0 means untouched; 325 means the whole region is marked.
+			set_local_variable = {
+				name = nwp_trk_ct
+				value = {
+					every_ownable_location_in_region = {
+						limit = { has_variable = nwp_contacted }
+						add = 1
+					}
+				}
+			}
+			error_log = "::NWPTRACK::[GetCurrentYear]:meso_pop=[SCOPE.GetLocalVariable('nwp_trk_pop').GetValue]:cocoliztli_locs=[SCOPE.GetLocalVariable('nwp_trk_coc').GetValue]:agri_collapse=[SCOPE.GetLocalVariable('nwp_trk_ac').GetValue]:contacted=[SCOPE.GetLocalVariable('nwp_trk_ct').GetValue]"
 			remove_local_variable = nwp_trk_pop
 			remove_local_variable = nwp_trk_coc
 			remove_local_variable = nwp_trk_ac
+			remove_local_variable = nwp_trk_ct
 		}
 
 		# Collapse stamping. This lives here rather than only in nwp.1 because
