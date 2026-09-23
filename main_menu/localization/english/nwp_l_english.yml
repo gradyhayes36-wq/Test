@@ -17,6 +17,13 @@
  nwp_agricultural_collapse: "Agricultural Collapse"
  nwp_colonial_labour_regime: "Colonial Disruption"
 
+ # Static modifiers want a STATIC_MODIFIER_NAME_ prefix as well. Without
+ # these the game falls back to the key and the player sees
+ # "STATIC MODIFIER NAME nwp agricultural collapse" in the tooltip.
+ STATIC_MODIFIER_NAME_nwp_virgin_soil: "Virgin Soil"
+ STATIC_MODIFIER_NAME_nwp_agricultural_collapse: "Agricultural Collapse"
+ STATIC_MODIFIER_NAME_nwp_colonial_labour_regime: "Colonial Disruption"
+
  # Cortes expedition
  nwp.20.t: "The Mainland Beyond the Islands"
  nwp.20.d: "Reports reach Seville of a great empire west of the islands - cities on a lake, gold worked with a skill our own smiths cannot match, and princes who command more subjects than any Christian king. A captain waits on our licence to sail for the mainland coast at Cuetlaxtlan, which the sailors are calling the True Cross.\n\nThe Casa de Contratacion advises that whoever plants a port on that shore will hold the door to whatever lies behind it."
