@@ -170,3 +170,47 @@ the disease remains decoration rather than mechanism.
 `cocoliztli_locs=0` and no M&T disease active. Not identified. Candidates are a
 war, a famine cascade, or a large cohort of stamps landing at once before the
 1600 issuing cutoff.
+
+---
+
+## The complete series
+
+`data/unsteered-1337-mesoamerica.csv` holds the full year-by-year record,
+1499-1704, 206 samples, recovered from the live log archiver rather than a
+truncated `error.log` tail. Peak 11,719.9k (1509), trough 1,944.1k (1651), end
+2,952.7k (1704).
+
+Biggest single-year falls:
+
+| Years | | |
+|---|---|---|
+| 1649-1650 | 2,737.7k -> 2,203.3k | **-19.5%** (cocoliztli) |
+| 1598-1599 | 4,179.8k -> 3,631.2k | -13.1% |
+| 1631-1632 | 2,739.8k -> 2,402.5k | -12.3% |
+| 1650-1651 | 2,203.3k -> 1,944.1k | -11.8% (cocoliztli) |
+| 1539-1540 | 8,114.5k -> 7,532.4k | -7.2% |
+
+Three of the five largest are not the epidemic, and none of those three has an
+identified cause - `cocoliztli_locs=0` and M&T's diseases absent at each. They
+are most likely war, famine cascades, or large stamp cohorts landing together.
+
+## An instrumentation limitation, found in the archive
+
+The 1516 spawn never appears in the tracker. `cocoliztli_locs` reads 0 at every
+monthly sample through 1516-1517 - yet `nwp.1` fired **nine times** in those two
+years, and that event only fires when the disease spreads to a country.
+
+The explanation is in the tracker's own scope: `nwp_trk_coc` counts locations
+**in mesoamerica_region only**. The 1516 spawn landed in a 97.7k-pop location,
+far above the Mesoamerican average of ~34k at that date, so it was plausibly in
+the Andes - where the tracker cannot see it.
+
+So `cocoliztli_locs=0` has always meant "none in Mesoamerica", not "none
+anywhere", and every earlier statement in these notes that the disease was
+absent should be read with that caveat. A hemisphere-wide counter would fix it.
+
+Related: `nwp.1 fired, stamping 1 locations` is the typical line - the
+country-spread event reaches one location at a time, which is why the monthly
+sweep in the Situation does the real stamping work. That was the 1503 coverage
+fix and it is still holding.
+
