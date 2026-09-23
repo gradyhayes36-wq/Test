@@ -56,7 +56,94 @@ New World total **17,039.0k against 34,116.8k at 1484: -50.1%.**
 | East Coast | 1,816.6k | 1,039.9k | -42.8% |
 | Colombia | 2,961.5k | 1,833.7k | -38.1% |
 
-## The disease still is not the mechanism
+## Correction: the disease IS the mechanism, it just arrives late
+
+The section below was written at the 1600 checkpoint and its conclusion is
+wrong for the full run. Kept because the 1600 reading itself was accurate.
+
+Three more natural spawns followed, with the eligible-location count climbing
+as European ownership spread - 107 in 1516, then 298, 354, 389:
+
+```
+::NWPSPAWN::1650:cocoliztli spawned:pop=22.39528
+::NWPSPAWN::1671:cocoliztli spawned:pop=16.12683
+::NWPSPAWN::1681:cocoliztli spawned:pop=11.12459
+```
+
+The 1650 spawn established. It reached **240 of 325 locations** and took
+Mesoamerica from 2,737.7k to **1,944.1k in two years - -29.0%** - then burned
+out inside three.
+
+| Year | Mesoamerica | Infected |
+|---|---|---|
+| 1649 | 2,737.7k | 0 |
+| **1650** | 2,203.3k | **240** |
+| **1651** | **1,944.1k** (trough) | 237 |
+| 1652 | 1,963.2k | 3 |
+| 1653 | 1,982.9k | 0 |
+
+That is the second time an established cocoliztli wave has been measured, and
+the two agree closely: -29.5% over 1631-32 in the steered run, -29.0% over
+1650-51 here. When it takes hold it is worth roughly a third of the region in
+two years, reliably.
+
+**Trough: 1,944.1k in 1651, -83.4% from the 1510 peak.** Without that wave the
+region would have bottomed near 2,700k - so the disease is worth about 30% of
+the total collapse, and all of the bottom.
+
+## Trough, recovery and teardown
+
+| Phase | Rate |
+|---|---|
+| 1510-1600, collapse | -1.367%/yr |
+| 1600-1649, slow grind | -0.458%/yr |
+| 1650-51, epidemic | -29.0% total |
+| 1651-1704, recovery | **+0.789%/yr** |
+
+Recovery matches the steered run almost exactly (+0.708%/yr there). By 1704
+Mesoamerica is back to 2,952.7k, still 74.8% below its 1510 peak.
+
+Stamp teardown is on schedule: at 1704 `agri_collapse=0` and `labour_regime=0`,
+both expired as designed (last issued before the 1600 cutoff, 60-year
+duration). Only `virgin_soil` remains at 3,317, and the Situation is still
+ACTIVE pending its 1730 end date.
+
+## Hemisphere at 1704
+
+New World total **23,252.8k, -31.8% against 1484** - recovered from the -50.1%
+low at 1604, and the recovery is overwhelmingly colonial rather than
+indigenous: Canada 220k -> 1,823k, East Coast 1,040k -> 4,228k, Caribbean 192k
+-> 826k. The 1600s colonial boom is modelled.
+
+## The 1600 reading, as written at the time
+
+
+```
+::NWPROLL::1516:spawn roll succeeded:eligible_ignoring_climate=107
+::NWPSPAWN::1516:cocoliztli spawned:pop=97.66374
+```
+
+One natural spawn in ninety years, and the density gate worked exactly as
+designed - 107 locations eligible, and it landed in a **97.7k-pop** location
+rather than a thin colonial outpost. But `cocoliztli_locs` is 0 at every
+checkpoint after it, and `agri_collapse` peaked at 7 locations and is 0 at
+1604, because that stamp is disease-gated.
+
+M&T's own diseases are absent too: malaria, smallpox and measles all 0 through
+1558 and 1604. The 1660 run had measles in 370 locations.
+
+**So the entire -70.8% is `labour_regime` (1,848 locations at 1604) and
+`virgin_soil` (4,219), with no epidemic contribution at all.** That is a
+stronger result for the modifier pathway than any previous run, and it means
+the disease remains decoration rather than mechanism.
+
+## One unexplained event
+
+1598 -> 1599 drops 13.1% in a single year, 4,179.8k -> 3,631.2k, with
+`cocoliztli_locs=0` and no M&T disease active. Not identified. Candidates are a
+war, a famine cascade, or a large cohort of stamps landing at once before the
+1600 issuing cutoff.
+
 
 ```
 ::NWPROLL::1516:spawn roll succeeded:eligible_ignoring_climate=107
